@@ -6,3 +6,5 @@ from django.db import models
 class UserProfile(models.Model):
     username = models.CharField(max_length=30)
     date_created = models.DateField()
+    image = models.ImageField(upload_to='profile/')
+    
