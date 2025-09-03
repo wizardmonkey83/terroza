@@ -29,7 +29,8 @@ class ReadingLog(models.Model):
     # automatically sets and is immutable
     date_of_entry = models.DateField(auto_add_now=True)
 
-    
+    def __str__(self):
+        return f"{self.book.title} - {self.percentage_complete} Percent Complete"
 
 
 
