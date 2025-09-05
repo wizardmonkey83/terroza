@@ -27,7 +27,7 @@ class ReadingLog(models.Model):
     # set a min length
     entry = models.TextField()
     # automatically sets and is immutable
-    date_of_entry = models.DateField(auto_add_now=True)
+    date_of_entry = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.book.title} - {self.percentage_complete} Percent Complete"
