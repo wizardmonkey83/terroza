@@ -8,20 +8,13 @@ from dotenv import load_dotenv
 from .forms import BookEntry, BookQuery
 from .models import ReadingLog
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
-PROJECT_ROOT = os.path.dirname(BASE_DIR)
-
-load_dotenv(os.path.join(PROJECT_ROOT, ".gitignore/.env"))
-
 def search_books(request):
 
     if request.method == "POST":
-
         form = BookQuery(request.POST)
-
         if form.is_valid():
             
-            # gets the user's query from the frontend and formats it so its ready to be ingested by google books 
+            # gets the user"s query from the frontend and formats it so its ready to be ingested by google books 
             user_query = form.cleaned_data["user_query"]
             formatted_user_query = user_query.replace(" ", "+")
 
@@ -30,11 +23,37 @@ def search_books(request):
             google_books_api_url = f"https://www.googleapis.com/books/v1/volumes?q={formatted_user_query}&fields=items(volumeInfo(authors,pageCount,title,publishedDate,imageLinks/thumbnail))&key={api_key}"
             response = requests.get(google_books_api_url)
             data = response.json()
-            return data
-        
+
+            # stores the information recieved by google books into a new array used for rendering
+            books_data = []
+            if "items" in data:
+                for item in data["items"]:
+                    # using empty dictionary to avoid triggering a KeyError if there isnt volume information availible
+                    volume_info = item.get("volumeInfo", {})
+                    title = volume_info.get("title", "No Title Available")
+                    authors = ", ".join(volume_info.get("authors", ["Unknown Author"]))
+                    pages = volume_info.get("pageCount", "Page Count Unknown")
+                    image_url = volume_info.get("imageLinks", {}).get("thumbnail", "")
+                    
+                    # calculate point potential based on page count
+                    point_potential = int(pages * 10) 
+
+                    books_data.append({
+                        "title": title,
+                        "author": authors,
+                        "pages": pages,
+                        "image_url": image_url,
+                        "point_potential": point_potential
+                    })
+            # if the user searches for a book, the above logic gets executed and HTMX reloads the html fragment containing each relevant book
+            return render(request, "books/book_search_results.html", {"books": books_data})
+    
+    return render(request, "books/search_books.html")
 
 
-def add_book(requests):
+
+
+# def add_book(requests):
     # if the user presses "add" the books information gets stored to the database and is linked to the user
     
 

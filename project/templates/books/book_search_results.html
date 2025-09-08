@@ -1,0 +1,15 @@
+<div id="search-results">
+    {% if books %}
+        {% for book in books %}
+            <div class="book-card">
+                <img src="{{ book.image_url }}" alt="{{ book.title }}">
+                <h3>{{ book.title }}</h3>
+                <p>by {{ book.author }}</p>
+                <p>{{ book.pages }} pages</p>
+                <p>Point Potential: {{ book.point_potential }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No books found.</p>
+    {% endif %}
+</div>

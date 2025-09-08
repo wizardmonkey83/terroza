@@ -1,0 +1,12 @@
+<!-- for passing google books api information -->
+<!DOCTYPE html>
+<html lang="en">
+    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+    <form hx-post="{% url 'search_books' %}" hx-target="#search-results" hx-swap="outerHTML">
+        <input type="text" name="user_query" placeholder="Search for a book...">
+        {% csrf_token %}
+        <button type="submit">Search</button>
+    </form>
+
+<div id="search-results">
+    </div>
