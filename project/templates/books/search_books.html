@@ -1,12 +1,42 @@
 <!-- for passing google books api information -->
+ {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@1.9.9"></script>
-    <form hx-post="{% url 'search_books' %}" hx-target="#search-results" hx-swap="outerHTML">
-        <input type="text" name="user_query" placeholder="Search for a book...">
-        {% csrf_token %}
-        <button type="submit">Search</button>
-    </form>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+    <body>
 
-<div id="search-results">
-    </div>
+        <nav class="navbar">
+            <div class="logo"><a href="index.html">Terroza</a></div>
+            <ul class="nav-links">
+                <li><a href="leaderboard.html">Leaderboard</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+            </ul>
+        </nav>
+
+        <main> 
+            <div class="search-box">
+                <form hx-post="{% url 'search_books' %}" hx-target="#search-results" hx-swap="outerHTML">
+                    <input type="text" name="user_query" placeholder="Search for a book...">
+                    {% csrf_token %}
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+
+        <div id="search-results">
+            </div>
+        </main>
+    </body>
+</html>

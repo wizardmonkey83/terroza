@@ -1,0 +1,51 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    background-color:white;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  position:sticky;
+  top:0;
+  z-index: 3;
+  background-color: transparent;
+  height: 8px;
+}
+
+/* font for logo, nav-bar, and headers */
+.logo,
+.nav-links a,
+.text-content h1,
+.page-content h1 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* font for body/rest of site */
+body,
+.text-content p,
+.page-content p {
+  font-family: 'DM Sans', sans-serif;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  align-items: center;
+}
+
+.search-box {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+}

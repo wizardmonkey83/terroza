@@ -20,7 +20,7 @@ def search_books(request):
 
             # performs the api search and returns a json reponse with the fields --> authors, page count, title, published date, and front cover
             api_key = os.getenv("GOOGLE_BOOKS_API_KEY")
-            google_books_api_url = f"https://www.googleapis.com/books/v1/volumes?q={formatted_user_query}&fields=items(volumeInfo(authors,pageCount,title,publishedDate,imageLinks/thumbnail))&key={api_key}"
+            google_books_api_url = f"https://www.googleapis.com/books/v1/volumes?q={formatted_user_query}&fields=items(volumeInfo(authors,pageCount,title,publishedDate,imageLinks/thumbnail))&key=AIzaSyCsaOh4ZMAGAlansezPtnnxNNy2uhSYhnk"
             response = requests.get(google_books_api_url)
             data = response.json()
 
