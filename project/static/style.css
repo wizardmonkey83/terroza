@@ -13,8 +13,9 @@ body {
   position:sticky;
   top:0;
   z-index: 3;
-  background-color: transparent;
+  background-color: white;
   height: 8px;
+  border-bottom: 1px solid black;
 }
 
 /* font for logo, nav-bar, and headers */
@@ -58,7 +59,9 @@ body,
   background-color: rgb(96 139 168 / 0.2);
   display: flex;
   flex-direction: row;
+  /* centers the container/box along the x-axis */
   justify-content: center;
+  /* centers along the y-axis */
   align-items: center;
 }
 
@@ -79,4 +82,16 @@ h1, h2 {
   letter-spacing: 0.02em;
   justify-content: center;
   text-align: center;
+}
+
+.main-btn {
+  background-color: #04AA6D;
+  border: 2px red;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  display: inline-block;
+  justify-content: center;
+  align-items: center;
+
 }

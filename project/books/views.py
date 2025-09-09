@@ -23,8 +23,7 @@ def search_books(request):
             google_books_api_url = f"https://www.googleapis.com/books/v1/volumes?q={formatted_user_query}&fields=items(volumeInfo(authors,pageCount,title,publishedDate,imageLinks/thumbnail))&key=AIzaSyCsaOh4ZMAGAlansezPtnnxNNy2uhSYhnk"
             response = requests.get(google_books_api_url)
             data = response.json()
-
-            # stores the information recieved by google books into a new array used for rendering
+            
             books_data = []
             if "items" in data:
                 for item in data["items"]:
@@ -34,8 +33,6 @@ def search_books(request):
                     authors = ", ".join(volume_info.get("authors", ["Unknown Author"]))
                     pages = volume_info.get("pageCount", "Page Count Unknown")
                     image_url = volume_info.get("imageLinks", {}).get("thumbnail", "")
-                    
-                    # calculate point potential based on page count
                     point_potential = int(pages * 10) 
 
                     books_data.append({

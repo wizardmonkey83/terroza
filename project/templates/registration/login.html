@@ -19,7 +19,7 @@
 <body>
 
       <nav class="navbar">
-          <div class="logo"><a href="index.html">Terroza</a></div>
+          <div class="logo"><a href="base.html">Terroza</a></div>
           <ul class="nav-links">
               <li><a href="leaderboard.html">Leaderboard</a></li>
               <li><a href="about.html">About</a></li>
@@ -30,11 +30,11 @@
       <main>
         <section class="log-in">
           <div class="container">
-            <h2>Log In</h2>
+            <h2 class="header">Log In</h2>
               <form method="post">
                 {% csrf_token %}
                 {{ form }}
-                <button type="submit">Log In</button>
+                <button type="submit" class="main-btn">Log In</button>
               </form>
           </div>
         </section>

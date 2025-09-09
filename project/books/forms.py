@@ -5,3 +5,6 @@ class BookEntry(forms.Form):
 
 class BookQuery(forms.Form):
     user_query = forms.CharField(label="Your Query", max_length=200)
+
+class AddBook(forms.Form):
+    title = forms.CharField(label="Title")
