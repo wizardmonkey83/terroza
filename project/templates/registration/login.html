@@ -1,13 +1,44 @@
 <!-- templates/registration/login.html -->
-{% extends "base.html" %}
+<!-- login page -->
+ {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
 
-{% block title %}Login{% endblock %}
+      <nav class="navbar">
+          <div class="logo"><a href="index.html">Terroza</a></div>
+          <ul class="nav-links">
+              <li><a href="leaderboard.html">Leaderboard</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="signup.html">Sign Up</a></li>
+          </ul>
+      </nav>
 
-{% block content %}
-<h2>Log In</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form }}
-  <button type="submit">Log In</button>
-</form>
-{% endblock %}
+      <main>
+        <section class="log-in">
+          <div class="container">
+            <h2>Log In</h2>
+              <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <button type="submit">Log In</button>
+              </form>
+          </div>
+        </section>
+      </main>
+</body>
+</html>
+
