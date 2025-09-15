@@ -17,11 +17,24 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
+from routing import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("accounts/", include("django.contrib.auth.urls")),
-    path("accounts/", include("accounts.urls")),
-    path("", TemplateView.as_view(template_name="home.html"), name="home"),
+    path("", TemplateView.as_view(template_name="index.html"), name="index"),
+    path("signup/", include("django.contrib.auth.urls")),
+    path("login/", include("django.contrib.auth.urls")),
+    path("", include("accounts.urls")),
     path("", include("books.urls")),
+    path("about/", views.about, name="about"),
+    path("signup/", views.signup, name="signup"),
+    path("leaderboard/", views.leaderboard, name="leaderboard"),
+    path("user_home/", views.user_home, name="user_home"),
+    path("profile/", views.profile, name="profile"),
 ]
+
+if settings.DEBUG:
+    urlpatterns+=static(settings.MEDIA_URL, 
+document_root=settings.MEDIA_ROOT) 

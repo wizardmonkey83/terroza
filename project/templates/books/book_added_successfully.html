@@ -1,0 +1,7 @@
+<div class="book-card">
+    {% if title %}
+        <h3>{{ title }} has been added to your library</h3>
+    {% else %}
+        <h3>Could not upload {{ title }} to your library</h3>
+    {% endif %}
+</div>

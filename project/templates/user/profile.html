@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+    <body>
+
+        <nav class="navbar">
+            <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
+            <ul class="nav-links">
+                <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                {% else %}
+                    <li><a href="{% url 'signup' %}">Sign Up</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <div class="profile-container">
+            {% if user.is_authenticated %}
+                <section class="identity-section">
+                    <div class="profile-picture-container">
+                        <img src="{{ user.profile_picture.url }}" alt="User Profile Picture">
+                    </div>
+                    <div class="user_info">
+                        <h1>{{ user.username }}</h1>
+                        <p>Joined On {{ user.joined_on }}</p>
+                    </div>
+                </section>
+
+                <!-- upper row stats -->
+                <section class="stats-section-upper">
+                    <!-- books read -->
+                    <div class="stat-card">
+                        <div class="stat-value">{{ user.books_read }}</div>
+                        <div class="stat-label">Books Read</div>
+                    </div>
+
+                    <!-- words written -->
+                     <div class="stat-card">
+                        <div class="stat-value"> {{ user.words_written }}</div>
+                        <div class="stat-label">Words Written</div>
+                     </div>
+
+                     <!-- points earned -->
+                     <div class="stat-card">
+                        <div class="stat-value"> {{ user.total_points }}</div>
+                        <div class="stat-label">Points Earned</div>
+                     </div>
+
+                </section>
+
+                <section class="stats-section-lower">
+                     <!-- pages read -->
+                     <div class="stat-card">
+                        <div class="stat-value"> {{ user.pages_read }}</div>
+                        <div class="stat-label">Pages Read</div>
+                     </div>
+
+                     <!-- global rank -->
+                     <div class="stat-card">
+                        <div class="stat-value"> {{ user.global_rank }}</div>
+                        <div class="stat-label">Global Ranking</div>
+                     </div>
+
+                     <!-- entries made  -->
+                     <div class="stat-card">
+                        <div class="stat-value"> {{ user.entries_made }}</div>
+                        <div class="stat-label">Entries Made</div>
+                     </div>
+
+                </section>
+
+                <!-- edit profile -->
+                <section class="edit-profile-action">   
+                    <button id="edit-profile">Edit Profile</button>
+
+                </section>
+            {% endif %}
+
+        </div>
+    </body>
+</html>

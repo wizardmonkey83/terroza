@@ -26,34 +26,18 @@
         </nav>
 
         <main>
-          <section class="form">
-            <div class="form-container">
-              <h2 class="header">Sign up</h2>
-              <form method="POST">
-                  {% csrf_token %}
-
-                  <div class="form-field">
-                      {{ form.username.label_tag }}
-                      {{ form.username }}
-                  </div>
-                  <div class="form-field">
-                      {{ form.email.label_tag }}
-                      {{ form.email }}
-                  </div>
-                  <div class="form-field">
-                      {{ form.password1.label_tag }}
-                      {{ form.password1 }}
-                  </div>
-                  <div class="form-field">
-                      {{ form.password2.label_tag }}
-                      {{ form.password2 }}
-                  </div>
-                  
-                  <button class="submit-btn" type="submit">Sign Up</button>
-                  <a href="{% url 'login' %}" class="link">Already have an Account?</a>
-              </form>
-            </div>
-          </section>
+            {% if user.is_authenticated %}
+            <p>Hi {{ user.username }}!</p>
+            <p><a href="{% url 'password_change' %}">Password Change</a></p>
+            <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit">Log Out</button>
+            </form>
+            {% else %}
+            <p>You are not logged in</p>
+            <p><a href="{% url 'password_reset' %}">Password Reset</a></p>
+            <p><a href="{% url 'login' %}">Log In</a></p>
+            {% endif %}
         </main>
     </body>
 </html>

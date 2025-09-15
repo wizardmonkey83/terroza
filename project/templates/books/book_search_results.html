@@ -2,12 +2,26 @@
     {% if books %}
         {% for book in books %}
             <div class="book-card">
-                <img src="{{ book.image_url }}" alt="{{ book.title }}">
-                <h3>{{ book.title }}</h3>
-                <p>by {{ book.author }}</p>
-                <p>{{ book.pages }} pages</p>
-                <p>Point Potential: {{ book.point_potential }}</p>
-                <button type="submit">Add Book</button>
+                <form hx-post="{% url 'add_book' %}" hx-target="closest .book-card" hx-swap="outerHTML">
+
+                    <img src="{{ book.image_url }}" alt="{{ book.title }}">
+                    <input type="hidden" name="thumbnail" value="{{ book.image_url }}">
+
+                    <h3>{{ book.title }}</h3>
+                    <input type="hidden" name="title" value="{{ book.title }}">
+
+                    <p>by {{ book.author }}</p>
+                    <input type="hidden" name="author" value="{{ book.author }}">
+
+                    <p>{{ book.pages }} pages</p>
+                    <input type="hidden" name="page_count" value="{{ book.pages }}"/>
+
+                    <p>Point Potential: {{ book.point_potential }}</p>
+                    <input type="hidden" name="point_potential" value="{{ book.point_potential }}"/>
+                    
+                    {% csrf_token %}
+                    <button type="submit">Add Book</button>
+                </form>
             </div>
         {% endfor %}
     {% else %}

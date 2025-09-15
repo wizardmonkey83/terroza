@@ -26,34 +26,19 @@
         </nav>
 
         <main>
-          <section class="form">
-            <div class="form-container">
-              <h2 class="header">Sign up</h2>
-              <form method="POST">
-                  {% csrf_token %}
+            <section class="about-frame">
 
-                  <div class="form-field">
-                      {{ form.username.label_tag }}
-                      {{ form.username }}
-                  </div>
-                  <div class="form-field">
-                      {{ form.email.label_tag }}
-                      {{ form.email }}
-                  </div>
-                  <div class="form-field">
-                      {{ form.password1.label_tag }}
-                      {{ form.password1 }}
-                  </div>
-                  <div class="form-field">
-                      {{ form.password2.label_tag }}
-                      {{ form.password2 }}
-                  </div>
-                  
-                  <button class="submit-btn" type="submit">Sign Up</button>
-                  <a href="{% url 'login' %}" class="link">Already have an Account?</a>
-              </form>
-            </div>
-          </section>
+                <div class="about-description">
+                    <h2>My Journey</h2>
+                    <p>A paragraph of text</p>
+                </div>
+
+                <div class="creator-photo">
+                    <img src
+
+                </div>
+
+            </section>
         </main>
     </body>
 </html>

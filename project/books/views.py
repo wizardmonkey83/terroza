@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 import requests
 import os
 from dotenv import load_dotenv
 
 # Create your views here.
-from .forms import BookEntry, BookQuery
-from .models import ReadingLog
+from .forms import BookEntry, BookQuery, AddBook
+from .models import ReadingLog, Book
 
 def search_books(request):
 
@@ -29,6 +29,10 @@ def search_books(request):
                 for item in data["items"]:
                     # using empty dictionary to avoid triggering a KeyError if there isnt volume information availible
                     volume_info = item.get("volumeInfo", {})
+                    # so that the site doesn't tweak
+                    if not all(k in volume_info for k in ["pageCount", "title", "authors", "imageLinks"]):
+                        continue
+
                     title = volume_info.get("title", "No Title Available")
                     authors = ", ".join(volume_info.get("authors", ["Unknown Author"]))
                     pages = volume_info.get("pageCount", "Page Count Unknown")
@@ -49,10 +53,29 @@ def search_books(request):
 
 
 
-
-# def add_book(requests):
+def add_book(request):
     # if the user presses "add" the books information gets stored to the database and is linked to the user
-    
+    if request.method == "POST":
+        form = AddBook(request.POST)
+        if form.is_valid():
+            # takes the data from the HTML page and attributes it to the title within the form AddBook
+            title = form.cleaned_data["title"]
+            author = form.cleaned_data["author"]
+            page_count = form.cleaned_data["page_count"]
+            point_potential = form.cleaned_data["point_potential"]
+            thumbnail = form.cleaned_data["thumbnail"]
+
+            b = Book(title=title, author=author, cover_image=thumbnail, page_count=page_count, point_potential=point_potential, reading_status="reading")
+            b.save()
+            # figure out how to replace the card with a "book added" card
+            return render(request, "books/book_added_successfully.html", {"title": title})
+        
+        else:
+            print("FORM IS INVALID")
+            print(form.errors)
+        
+    return render(request, "books/search_books.html")
+
 
 
 
