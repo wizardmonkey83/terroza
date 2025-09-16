@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
 # Create your views here.
@@ -22,7 +22,9 @@ def login (request):
 
 # when the user is logged in 
 def user_home (request):
-    return render(request, "user/user_home.html")
+    if request.user.is_authenticated:
+        return render(request, "user/user_home.html")
 
 def profile (request):
-    return render(request, "user/profile.html")
+    if request.user.is_authenticated:
+        return render(request, "user/profile.html")
