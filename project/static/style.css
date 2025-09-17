@@ -88,6 +88,19 @@ section {
 }
 
 
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid var(--text-primary);
+    opacity: 0.8;
+    margin: 1em 0;
+    padding: 0;
+
+    
+}
+
+
 
 
 /* navbar */
@@ -177,39 +190,39 @@ section {
 
 
 
-/* --- PROFILE PAGE STRUCTURE --- */
+/* --- profile page --- */
 .profile-frame {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 3rem;              
-  padding: 2rem;          
-  max-width: 1100px;      
-  margin: auto;           
-  min-height: 100vh;
-  margin-top: 4.5rem;
+  grid-template-rows: auto auto;
+  justify-content: space-evenly;
+  padding: 1.5rem;
+  column-gap: 1rem;
 }
 
+/* --- inside profile-frame --- */
 .profile-container {
   grid-column: 1;
 
-}
-
-.stat-container {
-  grid-column: 2;
-
-}
-
-/* Generic Card Style for Sections */
-.identity-section, .stat-card, .edit-profile-action {
   background: rgba(118, 75, 162, 0.15);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  padding: 1.5rem;
+
   border-radius: 16px;
+  padding: 1rem;
+  max-width: 400px;
+
 }
 
+.shared-column {
+  grid-column: 2;
+
+
+}
+
+/* --- inside profile-container --- */
 .profile-picture-container img {
     width: 120px;
     height: 120px;
@@ -219,20 +232,21 @@ section {
 }
 
 
+/* inside shared column */
+.stats {
+  row-gap: 5.5rem;
 
-/* --- STATS SECTIONS (Upper and Lower) --- */
-.stats-section-upper,
-.stats-section-lower {
+}
+
+/* inside stats */
+.stat-section-upper,
+.stat-section-lower {
     display: grid;
-    /* This creates the 3-column layout you have */
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
 }
 
-.stat-card {
-    text-align: center;
-}
-
+/* inside stat-section-upper/lower */
 .stat-value {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 2.2rem;
@@ -247,6 +261,17 @@ section {
     letter-spacing: 1px;
     opacity: 0.6;
     margin-top: 0.75rem;
+}
+
+.stat-card {
+  background: rgba(118, 75, 162, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  padding: 1.5rem;
+  border-radius: 16px;
+  text-align: center;
 }
 
 
@@ -337,4 +362,36 @@ ul.errorlist {
   margin-bottom: 8px;
   font-size: 0.9rem;
   color: #ccc;
+}
+
+
+
+
+.search-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: rgba(160, 132, 203, 0.8);
+  box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.5);
+}
+
+.search-frame {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3rem;                       
+  max-width: 1100px;      
+  margin: auto;           
+  min-height: 100vh;
+  margin-top: 4.5rem;
 }

@@ -10,9 +10,9 @@ class Book(models.Model):
         ("read", "Read"),
     ]
 
-    title = models.CharField(max_length=500)
+    title = models.CharField(max_length=200) 
     author = models.CharField(max_length=200)
-    cover_image = models.ImageField()
+    cover_image = models.URLField(max_length=500)
     page_count = models.PositiveIntegerField()
     point_potential = models.PositiveIntegerField()
     reading_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="to-read")
@@ -21,6 +21,7 @@ class Book(models.Model):
         return self.title
 
 class ReadingLog(models.Model):
+    # might want to add 'user' as a foreign key
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="entries")
     percentage_complete = models.PositiveIntegerField()
     points_earned = models.PositiveIntegerField()

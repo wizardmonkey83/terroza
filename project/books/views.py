@@ -54,27 +54,29 @@ def search_books(request):
 
 
 def add_book(request):
-    # if the user presses "add" the books information gets stored to the database and is linked to the user
-    if request.method == "POST":
-        form = AddBook(request.POST)
-        if form.is_valid():
-            # takes the data from the HTML page and attributes it to the title within the form AddBook
-            title = form.cleaned_data["title"]
-            author = form.cleaned_data["author"]
-            page_count = form.cleaned_data["page_count"]
-            point_potential = form.cleaned_data["point_potential"]
-            thumbnail = form.cleaned_data["thumbnail"]
+    if request.user.is_authenticated:
+        # if the user presses "add" the books information gets stored to the database and is linked to the user
+        if request.method == "POST":
+            form = AddBook(request.POST)
+            if form.is_valid():
+                # takes the data from the HTML page and attributes it to the title within the form AddBook
+                user = request.user
+                title = form.cleaned_data["title"]
+                author = form.cleaned_data["author"]
+                page_count = form.cleaned_data["page_count"]
+                point_potential = form.cleaned_data["point_potential"]
+                thumbnail = form.cleaned_data["thumbnail"]
 
-            b = Book(title=title, author=author, cover_image=thumbnail, page_count=page_count, point_potential=point_potential, reading_status="reading")
-            b.save()
-            # figure out how to replace the card with a "book added" card
-            return render(request, "books/book_added_successfully.html", {"title": title})
-        
-        else:
-            print("FORM IS INVALID")
-            print(form.errors)
-        
-    return render(request, "books/search_books.html")
+                book = Book.objects.create(user=user, title=title, author=author, cover_image=thumbnail, page_count=page_count, point_potential=point_potential, reading_status="reading")
+                book.save()
+                # figure out how to replace the card with a "book added" card
+                return render(request, "books/book_added_successfully.html", {"title": title})
+            
+            else:
+                print("FORM IS INVALID") 
+                print(form.errors)
+            
+        return render(request, "books/search_books.html")
 
 
 

@@ -29,70 +29,78 @@
             </ul>
         </nav>
 
-        <section class="profile-frame">
-            {% if user.is_authenticated %}
-                <div class="profile-container"></div>
+        <div class="profile-frame">
 
-                    <div class="profile-picture-container">
-                        <img src="{{ user.profile.profile_picture.url }}" alt="User Profile Picture">
-                        <h1>{{ user.username }}</h1>
-                        <p>Joined On {{ user.date_joined }}</p>
-                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="profile-container">
 
-                    <button class="submit-btn">Edit Profile</button>
-        
-                </div>
+                            <div class="profile-picture-container">
+                                <img src="{{ user.profile.profile_picture.url }}" alt="User Profile Picture">
+                                <h1>{{ user.username }}</h1>
+                                <p>Joined On {{ user.date_joined }}</p>
+                            </div>
 
+                            <hr/>
+
+                            <button class="submit-btn">Edit Profile</button>
                 
-                <div class="stat-container">
-
-                    <div class="upper-stats">
-                    <!-- books read -->
-                        <div class="stat-card">
-                            <div class="stat-value">{{ user.profile.books_read }}</div>
-                            <div class="stat-label">Books Read</div>
                         </div>
 
-                        <!-- words written -->
-                        <div class="stat-card">
-                            <div class="stat-value"> {{ user.profile.words_written }}</div>
-                            <div class="stat-label">Words Written</div>
+                        
+                        
+                        <div class="shared-column">
+                            <div class="stats">
+                                <!-- books read -->
+                                <div class="stat-section-upper">
+                                    <div class="stat-card">
+                                        <div class="stat-value">{{ user.profile.books_read }}</div>
+                                        <div class="stat-label">Books Read</div>
+                                    </div>
+
+                                    <!-- words written -->
+                                    <div class="stat-card">
+                                        <div class="stat-value"> {{ user.profile.words_written }}</div>
+                                        <div class="stat-label">Words Written</div>
+                                    </div>
+
+                                    <!-- points earned -->
+                                    <div class="stat-card">
+                                        <div class="stat-value"> {{ user.profile.points }}</div>
+                                        <div class="stat-label">Points Earned</div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="stats">
+                                <div class="stat-section-lower">
+                                    <!-- pages read -->
+                                    <div class="stat-card">
+                                        <div class="stat-value"> {{ user.profile.pages_read }}</div>
+                                        <div class="stat-label">Pages Read</div>
+                                    </div>
+
+                                    <!-- global rank -->
+                                    <div class="stat-card">
+                                        <div class="stat-value"> {{ user.profile.global_rank }}</div>
+                                        <div class="stat-label">Global Ranking</div>
+                                    </div>
+
+                                    <!-- entries made  -->
+                                    <div class="stat-card">
+                                        <div class="stat-value"> {{ user.profile.entries_made }}</div>
+                                        <div class="stat-label">Entries Made</div>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
 
-                        <!-- points earned -->
-                        <div class="stat-card">
-                            <div class="stat-value"> {{ user.profile.points }}</div>
-                            <div class="stat-label">Points Earned</div>
-                        </div>
+                    
 
-                    </div>
+                        
+                    {% endif %}
 
-                    <div class="lower-stats">
-                        <!-- pages read -->
-                        <div class="stat-card">
-                            <div class="stat-value"> {{ user.profile.pages_read }}</div>
-                            <div class="stat-label">Pages Read</div>
-                        </div>
-
-                        <!-- global rank -->
-                        <div class="stat-card">
-                            <div class="stat-value"> {{ user.profile.global_rank }}</div>
-                            <div class="stat-label">Global Ranking</div>
-                        </div>
-
-                        <!-- entries made  -->
-                        <div class="stat-card">
-                            <div class="stat-value"> {{ user.profile.entries_made }}</div>
-                            <div class="stat-label">Entries Made</div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                
-            {% endif %}
-
-        </section>
+        </div>
     </body>
 </html>
