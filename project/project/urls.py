@@ -28,6 +28,7 @@ urlpatterns = [
     path("login/", include("django.contrib.auth.urls")),
     path("", include("accounts.urls")),
     path("", include("books.urls")),
+    path("", include("leaderboard.urls")),
     path("about/", views.about, name="about"),
     path("signup/", views.signup, name="signup"),
     path("leaderboard/", views.leaderboard, name="leaderboard"),

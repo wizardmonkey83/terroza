@@ -1,0 +1,29 @@
+<div id="search-results" class="leaderboard-search-results">
+    {% if user %}
+    <div class="leaderboard-card">
+        <div class="leaderboard-username">{{ user.username }}</div>
+
+        <div class="leaderboard-info">
+            <div class="stat-label">Words Written</div>
+            <p>{{ user.profile.words_written }}</p>
+        </div>
+
+        <div class="leaderboard-info">
+            <div class="stat-label">Entries Made</div>
+            <p>{{ user.profile.entries_made }}</p>
+        </div>
+
+        <div class="leaderboard-info">
+            <div class="stat-label">Pages Read</div>
+            <p>{{ user.profile.pages_read }}</p>
+        </div>
+
+        <div class="total-points">
+            <div class="stat-label">Points</div>
+            <p>{{ user.profile.points }}</p>
+        </div>
+    </div>
+    {% else %}
+        <p>No user found.</p>
+    {% endif %}
+</div>

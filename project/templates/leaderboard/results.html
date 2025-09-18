@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+    <body>
+
+        <nav class="navbar">
+            <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
+            <ul class="nav-links">
+                <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'signup' %}">Sign Up</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <div class="leaderboard-frame">
+
+                <div class="search-box">
+                    <form hx-post="{% url 'search_leaderboard' %}" hx-target="#search-results" hx-swap="outerHTML">
+                        <input type="text" class="search-input" name="query" placeholder="Search for a user...">
+                        {% csrf_token %}
+                        <button type="submit" class="submit-btn">Search</button>
+                    </form>
+                </div>
+                    
+                <div id="search-results" class="leaderboard-search-results">
+
+                    <div class="leaderboard-results">
+                        <form method="GET">
+                            {% if users %}
+                                {% for user in users %}
+                                <div class="leaderboard-card">
+                                    <div class="profile-picture-container">
+                                        <img src="{{ user.profile.profile_picture.url }}" alt="User Profile Picture">
+                                    </div>
+                                    
+                                    <div class="leaderboard-username">{{ user.username }}</div>
+
+                                    <div class="leaderboard-info">
+                                        <div class="stat-label">Words Written</div>
+                                        <p>{{ user.profile.words_written }}</p>
+                                    </div>
+
+                                    <div class="leaderboard-info">
+                                        <div class="stat-label">Entries Made</div>
+                                        <p>{{ user.profile.entries_made }}</p>
+                                    </div>
+
+                                    <div class="leaderboard-info">
+                                        <div class="stat-label">Pages Read</div>
+                                        <p>{{ user.profile.pages_read }}</p>
+                                    </div>
+
+                                    <div class="total-points">
+                                        <div class="stat-label">Points</div>
+                                        <p>{{ user.profile.points }}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        </form>
+                    </div>
+                
+                </div>
+
+            </div>
+        </main>
+    </body>
+</html>
