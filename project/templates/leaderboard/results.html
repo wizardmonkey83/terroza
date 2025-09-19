@@ -28,9 +28,43 @@
         <main>
             <div class="leaderboard-frame">
 
-                <div class="search-box">
+                <div class="top-3">
+                    {% if users %}
+                            {% for user in users|slice:"3" %}
+                            <div class="top-3-card">
+                                <div class="profile-picture-container">
+                                    <img src="{{ user.profile.profile_picture.url }}" alt="User Profile Picture">
+                                </div>
+                                
+                                <div class="leaderboard-username">{{ user.username }}</div>
+
+                                <div class="leaderboard-info">
+                                    <div class="stat-label">Words Written</div>
+                                    <p>{{ user.profile.words_written }}</p>
+                                </div>
+
+                                <div class="leaderboard-info">
+                                    <div class="stat-label">Entries Made</div>
+                                    <p>{{ user.profile.entries_made }}</p>
+                                </div>
+
+                                <div class="leaderboard-info">
+                                    <div class="stat-label">Pages Read</div>
+                                    <p>{{ user.profile.pages_read }}</p>
+                                </div>
+
+                                <div class="total-points">
+                                    <div class="stat-label">Points</div>
+                                    <p>{{ user.profile.points }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="leaderboard-search-box">
                     <form hx-post="{% url 'search_leaderboard' %}" hx-target="#search-results" hx-swap="outerHTML">
-                        <input type="text" class="search-input" name="query" placeholder="Search for a user...">
+                        <input type="text" class="search-input" name="query" placeholder="Search for a user..." required>
                         {% csrf_token %}
                         <button type="submit" class="submit-btn">Search</button>
                     </form>
@@ -38,41 +72,39 @@
                     
                 <div id="search-results" class="leaderboard-search-results">
 
-                    <div class="leaderboard-results">
-                        <form method="GET">
-                            {% if users %}
-                                {% for user in users %}
-                                <div class="leaderboard-card">
-                                    <div class="profile-picture-container">
-                                        <img src="{{ user.profile.profile_picture.url }}" alt="User Profile Picture">
-                                    </div>
-                                    
-                                    <div class="leaderboard-username">{{ user.username }}</div>
-
-                                    <div class="leaderboard-info">
-                                        <div class="stat-label">Words Written</div>
-                                        <p>{{ user.profile.words_written }}</p>
-                                    </div>
-
-                                    <div class="leaderboard-info">
-                                        <div class="stat-label">Entries Made</div>
-                                        <p>{{ user.profile.entries_made }}</p>
-                                    </div>
-
-                                    <div class="leaderboard-info">
-                                        <div class="stat-label">Pages Read</div>
-                                        <p>{{ user.profile.pages_read }}</p>
-                                    </div>
-
-                                    <div class="total-points">
-                                        <div class="stat-label">Points</div>
-                                        <p>{{ user.profile.points }}</p>
-                                    </div>
+                    <form method="GET">
+                        {% if users %}
+                            {% for user in users|slice:"3:" %}
+                            <div class="leaderboard-card">
+                                <div class="profile-picture-container">
+                                    <img src="{{ user.profile.profile_picture.url }}" alt="User Profile Picture">
                                 </div>
-                                {% endfor %}
-                            {% endif %}
-                        </form>
-                    </div>
+                                
+                                <div class="leaderboard-username">{{ user.username }}</div>
+
+                                <div class="leaderboard-info">
+                                    <div class="stat-label">Words Written</div>
+                                    <p>{{ user.profile.words_written }}</p>
+                                </div>
+
+                                <div class="leaderboard-info">
+                                    <div class="stat-label">Entries Made</div>
+                                    <p>{{ user.profile.entries_made }}</p>
+                                </div>
+
+                                <div class="leaderboard-info">
+                                    <div class="stat-label">Pages Read</div>
+                                    <p>{{ user.profile.pages_read }}</p>
+                                </div>
+
+                                <div class="total-points">
+                                    <div class="stat-label">Points</div>
+                                    <p>{{ user.profile.points }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </form>
                 
                 </div>
 

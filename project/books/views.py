@@ -82,13 +82,14 @@ def add_book(request):
 
 
 
-def get_book_entry(request):
+def save_book_entry(request):
     # if this is a POST request to the backend
     if request.method == "POST":
         # create an instance of the form BookEntry and populate it with the data from the request (the users entry)
         form = BookEntry(request.POST)
         # check to see if the form is valid (if the user made an entry)
         if form.is_valid():
+            
             entry = form.cleaned_data["entry"]
             rl = ReadingLog(entry=entry)
             rl.save()
