@@ -19,93 +19,58 @@
         <nav class="navbar">
             <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
             <ul class="nav-links">
-                <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
-                <li><a href="{% url 'about' %}">About</a></li>
-                <li><a href="{% url 'signup' %}">Sign Up</a></li>
+                <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'search' %}" class="nav-link">Books</a></li>
+                    <li><a href="{% url 'profile' %}" class="button-nav-link">Profile</a></li>
+                {% else %}
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
+                    <li><a href="{% url 'signup' %}" class="button-nav-link">Sign Up</a></li>
+                {% endif %}
             </ul>
         </nav>
 
         <main>
             <div class="leaderboard-frame">
 
-                <div class="top-3">
-                    {% if users %}
-                            {% for user in users|slice:"3" %}
-                            <div class="top-3-card">
-                                <div class="profile-picture-container">
-                                    <img src="{{ user.profile.profile_picture.url }}" alt="User Profile Picture">
-                                </div>
-                                
-                                <div class="leaderboard-username">{{ user.username }}</div>
-
-                                <div class="leaderboard-info">
-                                    <div class="stat-label">Words Written</div>
-                                    <p>{{ user.profile.words_written }}</p>
-                                </div>
-
-                                <div class="leaderboard-info">
-                                    <div class="stat-label">Entries Made</div>
-                                    <p>{{ user.profile.entries_made }}</p>
-                                </div>
-
-                                <div class="leaderboard-info">
-                                    <div class="stat-label">Pages Read</div>
-                                    <p>{{ user.profile.pages_read }}</p>
-                                </div>
-
-                                <div class="total-points">
-                                    <div class="stat-label">Points</div>
-                                    <p>{{ user.profile.points }}</p>
-                                </div>
-                            </div>
-                            {% endfor %}
-                    {% endif %}
-                </div>
-
-                <div class="leaderboard-search-box">
-                    <form hx-post="{% url 'search_leaderboard' %}" hx-target="#search-results" hx-swap="outerHTML">
-                        <input type="text" class="search-input" name="query" placeholder="Search for a user..." required>
-                        {% csrf_token %}
-                        <button type="submit" class="submit-btn">Search</button>
-                    </form>
-                </div>
+                <h2 class="header">The Wormiest Bookworms</h2>
                     
                 <div id="search-results" class="leaderboard-search-results">
 
                     <form method="GET">
                         {% if users %}
-                            {% for user in users|slice:"3:" %}
+                            {% for user in users %}
                             <div class="leaderboard-card">
-                                <div class="profile-picture-container">
+                                <div class="leaderboard-profile-picture-container">
                                     <img src="{{ user.profile.profile_picture.url }}" alt="User Profile Picture">
                                 </div>
                                 
                                 <div class="leaderboard-username">{{ user.username }}</div>
 
                                 <div class="leaderboard-info">
-                                    <div class="stat-label">Words Written</div>
-                                    <p>{{ user.profile.words_written }}</p>
+                                    <div class="leaderboard-stat-label">Words Written</div>
+                                    <div class="leaderboard-stat-value">{{ user.profile.words_written }}</div>
                                 </div>
 
                                 <div class="leaderboard-info">
-                                    <div class="stat-label">Entries Made</div>
-                                    <p>{{ user.profile.entries_made }}</p>
+                                    <div class="leaderboard-stat-label">Entries Made</div>
+                                    <div class="leaderboard-stat-value">{{ user.profile.entries_made }}</div>
                                 </div>
 
                                 <div class="leaderboard-info">
-                                    <div class="stat-label">Pages Read</div>
-                                    <p>{{ user.profile.pages_read }}</p>
+                                    <div class="leaderboard-stat-label">Pages Read</div>
+                                    <div class="leaderboard-stat-value">{{ user.profile.pages_read }}</div>
                                 </div>
 
-                                <div class="total-points">
-                                    <div class="stat-label">Points</div>
-                                    <p>{{ user.profile.points }}</p>
+                                <div class="leaderboard-info">
+                                    <div class="leaderboard-stat-label">Points</div>
+                                    <div class="leaderboard-stat-value">{{ user.profile.points }}</div>
                                 </div>
                             </div>
                             {% endfor %}
                         {% endif %}
                     </form>
-                
+                 
                 </div>
 
             </div>

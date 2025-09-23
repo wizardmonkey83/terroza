@@ -1,4 +1,3 @@
-<!-- for passing google books api information -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -20,12 +19,13 @@
         <nav class="navbar">
             <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
             <ul class="nav-links">
-                <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
-                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'search' %}" class="nav-link">Books</a></li>
+                    <li><a href="{% url 'profile' %}" class="button-nav-link">Profile</a></li>
                 {% else %}
-                    <li><a href="{% url 'signup' %}">Sign Up</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
+                    <li><a href="{% url 'signup' %}" class="button-nav-link">Sign Up</a></li>
                 {% endif %}
             </ul>
         </nav>
@@ -43,5 +43,10 @@
             <p><a href="{% url 'login' %}">Log In</a></p>
             {% endif %}
         </main>
+
+       
+
     </body>
+
+        
 </html>

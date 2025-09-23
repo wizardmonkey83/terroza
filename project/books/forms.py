@@ -1,6 +1,7 @@
 from django import forms
 
 class BookEntry(forms.Form):
+    title = forms.CharField(label="Title", max_length=200)
     entry = forms.CharField(label="Your Entry", min_length=350, max_length=700)
 
 class BookQuery(forms.Form):
@@ -12,3 +13,6 @@ class AddBook(forms.Form):
     page_count = forms.IntegerField(label="Pages")
     thumbnail = forms.URLField(label="Cover")
     point_potential = forms.IntegerField(label="Point Potential")
+
+class LoadBookEntry(forms.Form):
+    title = forms.CharField(label="Title", max_length=200)

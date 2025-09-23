@@ -34,6 +34,8 @@ urlpatterns = [
     path("leaderboard/", views.leaderboard, name="leaderboard"),
     path("user_home/", views.user_home, name="user_home"),
     path("profile/", views.profile, name="profile"),
+    path("search/", views.search, name="search"),
+    path("bookshelf/", views.bookshelf, name="bookshelf"),
 ]
 
 if settings.DEBUG:

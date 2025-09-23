@@ -1,0 +1,29 @@
+<div id="book-card" class="book-card">
+    {% if book %}
+        <div id="entry-card" class="entry-card">
+            <div class="book-cover">
+                    <img src="{{ book.cover_image }}" alt="Book Cover">
+                </div>
+
+                <div class="book-title">{{ book.title }}</div>
+                <div class="book-author">{{ book.author }}</div>
+                <div class="book-page-count">Page Count: {{ book.page_count }}</div>
+                <div class="book-reading-status">Status: {{ book.reading_status }}</div>
+                
+                {% if book.readinglog %}
+                    <div class="book-percentage-complete">Percent Complete: {{ book.readinglog.percentage_complete }}%</div>
+                {% else %}
+                    <div class="book-percentage-complete">Percent Complete: 0%</div>
+                {% endif %}
+                
+            <form hx-post="{% url 'save_entry' %}" hx-target="closest .entry-card" hx-swap="outerHTML">
+                <div class="entry-container">
+                    <input type="text" name="entry"/>
+                </div>
+                <input type="hidden" name="title" value="{{ book.title }}"/>
+                {% csrf_token %}
+                <button class="submit-btn">Save</button>
+            </form>
+        </div>
+    {% endif %}
+</div>

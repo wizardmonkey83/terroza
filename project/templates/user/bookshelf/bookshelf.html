@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+    <body>
+
+        <nav class="navbar">
+            <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
+            <ul class="nav-links">
+                <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'search' %}" class="nav-link">Explore</a></li>
+                    <li><a href="{% url 'bookshelf' %}" class="nav-link">Bookshelf</a></li>
+                    <li><a href="{% url 'profile' %}" class="button-nav-link">Profile</a></li>
+                {% else %}
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
+                    <li><a href="{% url 'signup' %}" class="button-nav-link">Sign Up/Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <main>
+            {% if user.is_authenticated %}
+                {% if user.books.all %}
+                    {% for book in user.books.all %}
+                        {% if book.reading_status == "reading" or book.reading_status == "to-read" %}
+                            <div id="book-card" class="book-card">
+                                <form hx-post="{% url 'load_entry' %}" hx-target="closest .book-card" hx-swap="outerHTML">
+                                    <div class="book-cover">
+                                        <img src="{{ book.cover_image }}" alt="Book Cover">
+                                    </div>
+
+                                    <div class="book-title">{{ book.title }}</div>
+                                    <div class="book-author">{{ book.author }}</div>
+                                    <div class="book-page-count">Page Count: {{ book.page_count }}</div>
+                                    <div class="book-reading-status">Status: {{ book.reading_status }}</div>
+                                    
+                                    {% if book.readinglog %}
+                                        <div class="book-percentage-complete">Percent Complete: {{ book.readinglog.percentage_complete }}%</div>
+                                    {% else %}
+                                        <div class="book-percentage-complete">Percent Complete: 0%</div>
+                                    {% endif %}
+
+                                    <input type="hidden" name="title" value="{{ book.title }}"/>
+
+                                    {% csrf_token %}
+                                    <button class="submit-btn">Make an Entry</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                <div class="error">
+                    <div class="header">Looks like your bookshelf is empty</div>
+                    <a href="{% url 'search' %}" class="link">Find Books</a>
+                </div>
+                {% endif %}
+
+            {% else %}
+            <div class="error">
+                <div class="header">Let's get you signed in</div>
+                <a href="{% url 'login' %}" class="link">Login/Sign Up</a>
+            </div>
+            {% endif %} 
+                                                
+            
+        </main>
+    </body>
+</html>

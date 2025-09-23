@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 
 # Create your views here.
-from .forms import BookEntry, BookQuery, AddBook
+from .forms import BookEntry, BookQuery, AddBook, LoadBookEntry
 from .models import ReadingLog, Book
 
 def search_books(request):
@@ -72,33 +72,73 @@ def add_book(request):
                 # figure out how to replace the card with a "book added" card
                 return render(request, "books/book_added_successfully.html", {"title": title})
             
-            else:
-                print("FORM IS INVALID") 
-                print(form.errors)
-            
         return render(request, "books/search_books.html")
 
 
 
 
 
-def save_book_entry(request):
+def load_entry(request):
     # if this is a POST request to the backend
     if request.method == "POST":
         # create an instance of the form BookEntry and populate it with the data from the request (the users entry)
-        form = BookEntry(request.POST)
-        # check to see if the form is valid (if the user made an entry)
+        form = LoadBookEntry(request.POST)
+        # check to see if the user made an entry
         if form.is_valid():
-            
-            entry = form.cleaned_data["entry"]
-            rl = ReadingLog(entry=entry)
-            rl.save()
 
-            return HttpResponseRedirect("entry_success/")
-        else:
-            form = BookEntry()
+            user = request.user
+            title = form.cleaned_data["title"] 
+            book = Book.objects.filter(user=user, title=title)[:1]
+            
+            return render(request, "user/bookshelf/entry_card.html", {"book": book})
+
+    return render(request, "user/bookshelf/bookshelf.html")
+
+
+
+def save_entry(request):
+
+    if request.method == "POST":
+        form = BookEntry(request.POST)
+        if form.is_valid():
+            user = request.user
+            title = form.cleaned_data["title"]
+            entry = form.cleaned_data["entry"]
+
+            book = Book.objects.filter(user=user, title=title)
+
+            percentage_complete = book.next_milestone
+            num_milestones = len(book.get_milestone_progress())
+            points = book.point_potential / num_milestones
+            points_earned = points
+
+            new_log = ReadingLog(user=user, book=book, entry=entry, points_earned=points_earned, percentage_complete=percentage_complete)
+            new_log.save()
+
+            if book.reading_status == "to-read":
+                book.reading_status == "reading"
+
+            if percentage_complete == 100:
+                book.reading_status == "read"
+            book.save()
+            
+
+            user.profile.points += points_earned
+            user.profile.entries_made += 1
+            user.profile.pages_read += (points_earned / 10)
+            user.profile.words_written += len(entry)
+            if book.reading_status == "read":
+                user.profile.books_read += 1
+            user.profile.save()
+            
+            return render(request, "user/bookshelf/entry_success_card.html")
         
-        return
+    return render(request, "user/bookshelf/entry_card.html")
+
+            
+
+
+
         
 
 

@@ -28,3 +28,11 @@ def user_home (request):
 def profile (request):
     if request.user.is_authenticated:
         return render(request, "user/profile.html")
+
+def search (request):
+    if request.user.is_authenticated:
+        return render(request, "books/search_books.html")
+    
+def bookshelf (request):
+    if request.user.is_authenticated:
+        return render(request, "user/bookshelf/bookshelf.html")

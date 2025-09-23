@@ -22,16 +22,13 @@
 body {
     font-family: 'DM Sans', sans-serif;
     color: var(--text-primary);
-    background-color: var(--background-dark);
-    background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 70%);
+    background-color: #1C2C4C;
     min-height: 100vh;
     overflow: none;
     margin: 0;
   
     justify-content: center;
     align-items: center;
-    background: #1a1a2e;
-    background: linear-gradient(45deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     color: #e0e0e0;
 }
 
@@ -131,13 +128,37 @@ hr {
     gap: 1.5rem;
 }
 
-.nav-links a {
+.nav-links a{
     color: var(--text-primary);
     text-decoration: none;
     font-weight: 500;
     opacity: 0.8;
 }
 
+.button-nav-link {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #764ba2;
+  color: #ffffff;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 3rem;
+  background-color: red;
+  color: white;
+  text-align: center;
+  z-index: -1;
+}
 
 
 
@@ -410,57 +431,111 @@ ul.errorlist {
 
 
 /* leaderboard page */
+/* --- LEADERBOARD STYLES --- */
+
 .leaderboard-frame {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 3rem;              
-  padding: 2rem;          
-  max-width: 1100px;      
-  margin: auto;           
-  min-height: 100vh;
-  margin-top: 4.5rem;
+    /* CHANGED: Added flex properties to properly center its children */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    
+    gap: 2rem; 
+    width: 100%;
+    max-width: 1200px; 
+    padding: 2rem 1rem; 
+    /* CHANGED: Centered the frame itself on the page */
+    margin: 2rem auto; 
 }
 
-.top-3 {
-
-  
+/* NEW: Styling for the new header you wanted */
+.leaderboard-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #e0e0e0;
+    text-align: center;
+    margin-bottom: 1rem; /* Adds space below the title */
 }
 
-
-.leaderboard-search-box {
-  
-  display: flex;
-  align-items: center;
-  height: 100px;
-  
-
+/* Container for the list of cards */
+.leaderboard-search-results form{
+    display: flex;
+    flex-direction: column;
+    /* CHANGED: Increased gap for more spacing between cards */
+    gap: 1.5rem; 
+    width: 100%; /* Allow it to fill the centered frame */
+    max-width: 950px;
+    font-family: 'DM Sans', sans-serif;
+    padding-bottom: 0.9rem;
 }
 
-.leaderboard-search-results {
-  height: 200px;
-  padding-bottom: 5rem;
-
-}
-
-
+/* Base style for a single user card */
 .leaderboard-card {
-  flex: 1; 
-  display: flex; 
-  flex-direction: row;
+  display: flex;
   align-items: center;
-
+  gap: 1.5rem; /* Increased gap for more internal spacing */
+  padding: .8rem 1.8rem;
+  border-radius: 16px;
+  
   background: rgba(118, 75, 162, 0.15);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 
-  border-radius: 16px;
-  padding: 1rem;
-  max-height: 100px;
+  color: #f0f0f0;
+}
 
-  
-  
+.leaderboard-card:hover {
+    background: rgba(118, 75, 162, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* CHANGED: Made the profile picture smaller and circular */
+.leaderboard-profile-picture-container img {
+    width: 50px;
+    height: 50px;
+    border-radius: 16%; /* Makes the image a circle */
+    object-fit: cover;
+}
+
+.leaderboard-username {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f0f0f0;
+    flex-grow: 1; /* This pushes the stats all the way to the right */
+}
+
+.leaderboard-info,
+.total-points {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    min-width: 110px;
+}
+
+.leaderboard-stat-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.6;
+  margin-top: 0.75rem;
+}
+
+.leaderboard-stat-value {
+    font-family: inherit;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+    padding-top: .3rem;
+    color: #ffffff;
+}
+
+.total-points-value {
+    font-family: inherit;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #ffffff;
 }
 
