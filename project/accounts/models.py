@@ -25,3 +25,5 @@ class FriendRequest(models.Model):
 
 
 
+
+

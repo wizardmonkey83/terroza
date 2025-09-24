@@ -21,4 +21,14 @@ class LoginForm(forms.Form):
     username = forms.CharField(max_length=200, required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
 
-    
+class SendFriendRequest(forms.Form):
+    username = forms.CharField(max_length=200)
+
+class AcceptFriendRequest(forms.Form):
+    request_id = forms.IntegerField()
+
+class RemoveFriend(forms.Form):
+    username = forms.CharField(max_length=200)
+
+class RemoveFriendRequest(forms.Form):
+    request_id = forms.IntegerField()

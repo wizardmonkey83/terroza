@@ -24,18 +24,20 @@ def login (request):
 # when the user is logged in 
 @login_required
 def user_home (request):
-    if request.user.is_authenticated:
-        return render(request, "user/user_home.html")
+    return render(request, "user/user_home.html")
 
 @login_required
 def profile (request):
-    if request.user.is_authenticated:
-        return render(request, "user/profile.html")
+    return render(request, "user/profile.html")
+
 @login_required
 def search (request):
-    if request.user.is_authenticated:
-        return render(request, "books/search_books.html")
+    return render(request, "books/search_books.html")
+
 @login_required
 def bookshelf (request):
-    if request.user.is_authenticated:
-        return render(request, "user/bookshelf/bookshelf.html")
+    return render(request, "user/bookshelf/bookshelf.html")
+
+@login_required
+def friends (request):
+    return render(request, "user/friends/friends.html")

@@ -1,12 +1,18 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile
+from django.db.models import Q
+
+from .models import Profile, FriendRequest
 from django.contrib.auth.models import User
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, SendFriendRequest, AcceptFriendRequest, RemoveFriend, RemoveFriendRequest
+
 from django.contrib.auth import login
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 
+# LOGIN/SIGN UP
 def signup_view(request):
 
     if request.method == "POST":
@@ -43,4 +49,125 @@ def login_view(request):
     
     return render(request, "registration/login.html", {"form": form})
         
+
+
+# MANAGING FRIENDSIPS 
+@login_required
+def send_friend_request(request):
     
+    if request.method == "POST":
+        form = SendFriendRequest(request.POST)
+        if form.is_valid():
+
+            username = form.cleaned_data["username"]
+            from_user = request.user
+
+            # no ghost requests
+            try:
+                to_user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                messages.error(request, f"User '{username}' does not exist")
+                return render(request, "user/friends/requests/error.html")
+
+            # so people cant friend themselves
+            if to_user == from_user:
+                messages.error(request, f"That lonely?")
+                return render(request, "user/friends/requests/error.html")
+            
+            # so that there arent duplicate requests
+            # cooked ahh query 
+            if FriendRequest.objects.filter(Q(from_user=from_user, to_user=to_user) | Q(from_user=to_user, to_user=from_user)).exists():
+                messages.error(request, f"Friend request already exists")
+                return render(request, "user/friends/requests/error.html")
+            
+            FriendRequest.objects.create(from_user=from_user, to_user=to_user)
+            messages.success(request, "Request Sent!")
+            return render(request, "user/friends/requests/success.html")
+    
+@login_required
+def accept_friend_request(request):
+
+    if request.method == "POST":
+        form = AcceptFriendRequest(request.POST)
+        if form.is_valid():
+
+            request_id = form.cleaned_data["request_id"]
+            friend_request = FriendRequest.objects.get(id=request_id)
+
+            if friend_request.to_user == request.user:
+                friend_request.to_user.profile.friends.add(friend_request.from_user)
+                friend_request.from_user.profile.friends.add(friend_request.to_user)
+                friend_request.delete()
+                messages.success(request, f"{friend_request.from_user} is now your friend!")
+                return render(request, "user/friends/requests/success.html")
+            else:
+                messages.error(request, "Unable to complete request")
+                return render(request, "user/friends/requests/error.html")
+    
+    return render()
+
+@login_required
+def remove_friend(request):
+
+    if request.method == "POST":
+        form = RemoveFriend(request.POST)
+        if form.is_valid():
+
+            try:
+                user = request.user
+                username = form.cleaned_data["username"] 
+
+                # dont need to use .objects before get since we're already inside the users' friends list
+                # pulls up the entire user instance of the friend, so anything related to the friend can be queried
+                friend_to_remove = user.profile.friends.get(username=username)
+                
+                user.profile.friends.remove(friend_to_remove)
+                # use .remove() to delete the friend instead of .delete() which removes the user related to the friend
+                friend_to_remove.profile.friends.remove(user)
+                messages.success(request, f"{friend_to_remove.username} is no longer your friend :(")
+                return render(request, "user/friends/requests/success.html")
+            
+            except User.DoesNotExist:
+                messages.error(request, "User is not on your friends list.")
+                return render(request, "user/friends/requests/error.html")
+            
+        
+@login_required
+def remove_friend_request(request):
+
+    if request.method == "POST":
+        form = RemoveFriendRequest(request.POST)
+        if form.is_valid():
+
+            request_id = form.cleaned_data["request_id"]
+            friend_request = FriendRequest.objects.get(id=request_id)
+
+            if friend_request.from_user == request.user or friend_request.to_user == request.user:
+                if friend_request:
+                    friend_request.delete()
+                    messages.success(request, f"Request successfully removed!")
+                    return render(request, "user/friends/requests/success.html")
+                else:
+                    messages.error(request, f"Unable to remove request")
+                    return render(request, "user/friends/requests/error.html")
+            else:
+                messages.error(request, f"Unable to remove request")
+                return render(request, "user/friends/requests/error.html")
+    
+
+# VIEWING FRIENDSHIPS
+@login_required
+def friends_list(request):
+    
+    if request.method == "GET":
+
+        user = request.user
+        friends = user.profile.friends.all()
+        return render(request, "user/friends/friends.html", {"friends": friends})
+    
+    return render(request, "user/friends/friends.html")
+
+
+                
+
+                
