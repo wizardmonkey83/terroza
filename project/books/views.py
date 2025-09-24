@@ -1,12 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 import requests
 import os
 from dotenv import load_dotenv
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 from .forms import BookEntry, BookQuery, AddBook, LoadBookEntry
 from .models import ReadingLog, Book
+
+
 
 def search_books(request):
 
@@ -52,7 +55,7 @@ def search_books(request):
     return render(request, "books/search_books.html")
 
 
-
+@login_required
 def add_book(request):
     if request.user.is_authenticated:
         # if the user presses "add" the books information gets stored to the database and is linked to the user
@@ -77,7 +80,7 @@ def add_book(request):
 
 
 
-
+@login_required
 def load_entry(request):
     # if this is a POST request to the backend
     if request.method == "POST":
@@ -88,14 +91,14 @@ def load_entry(request):
 
             user = request.user
             title = form.cleaned_data["title"] 
-            book = Book.objects.filter(user=user, title=title)[:1]
+            book = get_object_or_404(Book, user=user, title=title)
             
             return render(request, "user/bookshelf/entry_card.html", {"book": book})
 
     return render(request, "user/bookshelf/bookshelf.html")
 
 
-
+@login_required
 def save_entry(request):
 
     if request.method == "POST":
@@ -105,7 +108,8 @@ def save_entry(request):
             title = form.cleaned_data["title"]
             entry = form.cleaned_data["entry"]
 
-            book = Book.objects.filter(user=user, title=title)
+            # load the exact instance of the book in instead of using .filter() which returns a query set
+            book = Book.objects.get(user=user, title=title)
 
             percentage_complete = book.next_milestone
             num_milestones = len(book.get_milestone_progress())
@@ -116,19 +120,24 @@ def save_entry(request):
             new_log.save()
 
             if book.reading_status == "to-read":
-                book.reading_status == "reading"
+                book.reading_status = "reading"
 
             if percentage_complete == 100:
-                book.reading_status == "read"
+                book.reading_status = "read"
             book.save()
             
 
             user.profile.points += points_earned
             user.profile.entries_made += 1
             user.profile.pages_read += (points_earned / 10)
-            user.profile.words_written += len(entry)
+
+            split_entry = entry.split(" ")
+            user.profile.words_written += len(split_entry)
+
             if book.reading_status == "read":
                 user.profile.books_read += 1
+
+
             user.profile.save()
             
             return render(request, "user/bookshelf/entry_success_card.html")
