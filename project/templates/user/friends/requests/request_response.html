@@ -1,0 +1,9 @@
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags %}
+            <div id="replacement-frame" class="{{ message.tags }}">
+                <div class="message-text">{{ message }}</div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}

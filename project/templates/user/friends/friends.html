@@ -34,7 +34,7 @@
         <main>
             <div class="friends-frame">
 
-                <div class="friends-list">
+                <div id="replacement-frame" class="friends-list">
                 {% if user.is_authenticated %}
                     <form method="GET">
                         {% if friends %}
@@ -75,6 +75,17 @@
                         {% endif %}
                     </form>
                 {% endif %}
+                </div>
+
+                <div class="sidebar">
+                    
+                    <form hx-get="{% url 'load_send_friend_request' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                        <button type="submit" class="sidebar-button">Send Request</button>
+                    </form>
+
+                    <form hx-get="{% url 'load_pending_requests' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                        <button type="submit" class="sidebar-button">Pending</button>
+                    </form>
                 </div>
 
             </div>

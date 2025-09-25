@@ -1,0 +1,23 @@
+<div id="replacement-frame" class="pending-requests">
+    {% if pending_requests %}
+        {% for request in pending_requests %}
+                <div class="pending-requests-card">
+                    <div class="header">{{ request.from_user }} wants to be your friend!</div>
+                    <form hx-post="{% url 'accept_friend_request' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                        <input type="hidden" name="request_id" value="{{ request.id }}"/>
+                        {% csrf_token %}
+                        <button type="submit" class="submit-btn">Accept</button>
+                    </form>
+                    <form hx-post="{% url 'remove_friend_request' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                        <input type="hidden" name="request_id" value="{{ request.id }}"/>
+                        {% csrf_token %}
+                        <button type="submit" class="submit-btn">Decline</button>
+                    </form>
+                </div>
+        {% endfor %}
+    {% else %}
+    <div class="no-requests">
+        <div class="header">Nothing to see here...</div>
+    </div>
+    {% endif %}
+</div>
