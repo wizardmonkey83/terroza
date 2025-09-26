@@ -23,6 +23,7 @@
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'search' %}" class="nav-link">Explore</a></li>
                     <li><a href="{% url 'friends' %}" class="nav-link">Friends</a></li>
+                    <li><a href="{% url 'load_challenge_page' %}" class="nav-link">Challenges</a></li>
                     <li><a href="{% url 'bookshelf' %}" class="nav-link">Bookshelf</a></li>
                     <li><a href="{% url 'profile' %}" class="button-nav-link">Profile</a></li>
                 {% else %}
@@ -31,7 +32,7 @@
                 {% endif %}
             </ul>
         </nav>
-
+        
         <main>
             <section class="about-frame">
 

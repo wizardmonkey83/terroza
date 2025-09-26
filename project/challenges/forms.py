@@ -7,5 +7,5 @@ class SendChallengeRequest(forms.Form):
 class AcceptChallengeRequest(forms.Form):
     request_id = forms.IntegerField()
 
-class RescindChallengeRequest(forms.Form):
+class RemoveChallengeRequest(forms.Form):
     request_id = forms.IntegerField()

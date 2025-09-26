@@ -42,9 +42,16 @@ def send_challenge_request(request):
                 messages.error(request, "Challenge request already exists")
                 return render(request, "user/friends/requests/request_response.html")
             
-            ChallengeRequest.objects.create(from_user=from_user, to_user=to_user, book=book)
-            messages.success(request, "Challenge request sent!")
-            return render(request, "user/friends/requests/request_response.html")
+            try:
+                is_friended = from_user.profile.friends.get(user=to_user)
+            except:
+                messages.error(request, "You can only send challenge requests to friends")
+                return render(request, "user/friends/requests/request_response.html")
+            
+            if is_friended:
+                ChallengeRequest.objects.create(from_user=from_user, to_user=to_user, book=book)
+                messages.success(request, "Challenge request sent!")
+                return render(request, "user/friends/requests/request_response.html")
 
 
 @login_required
