@@ -14,6 +14,7 @@ class Profile(models.Model):
     words_written = models.PositiveIntegerField(default=0)
     entries_made = models.PositiveIntegerField(default=0)
     pages_read = models.PositiveIntegerField(default=0)
+    bookmarks = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.user.username}'s Profile"

@@ -29,6 +29,7 @@ urlpatterns = [
     path("", include("accounts.urls")),
     path("", include("books.urls")),
     path("", include("leaderboard.urls")),
+    path("", include("challenges.urls")),
     path("about/", views.about, name="about"),
     path("signup/", views.signup, name="signup"),
     path("leaderboard/", views.leaderboard, name="leaderboard"),
@@ -36,6 +37,7 @@ urlpatterns = [
     path("profile/", views.profile, name="profile"),
     path("search/", views.search, name="search"),
     path("bookshelf/", views.bookshelf, name="bookshelf"),
+    path("friends/", views.friends, name="friends"),
 ]
 
 if settings.DEBUG:

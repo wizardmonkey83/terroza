@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+    <body>
+
+        <nav class="navbar">
+            <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
+            <ul class="nav-links">
+                <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'search' %}" class="nav-link">Explore</a></li>
+                    <li><a href="{% url 'friends' %}" class="nav-link">Friends</a></li>
+                    <li><a href="{% url 'bookshelf' %}" class="nav-link">Bookshelf</a></li>
+                    <li><a href="{% url 'profile' %}" class="button-nav-link">Profile</a></li>
+                {% else %}
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
+                    <li><a href="{% url 'signup' %}" class="button-nav-link">Sign Up/Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <main>
+            <div class="friends-frame">
+
+                <div id="replacement-frame" class="challenges-list">
+                {% if user.is_authenticated %}
+                    
+                        {% if current_challenges %}
+                            {% for challenge in current_challenges %}
+                            <div class="challenge-card">
+                                <div class="challenge-book-cover-container">
+                                    <img src="{{ challenge.book.cover_image.url }}" alt="Book Cover">
+                                </div>
+
+                                <div class="challenge-title">Race to finish: {{ challenge.book.title }}</div>
+                                <div class="challenge-text">Started: {{ challenge.date_created }}</div>
+
+                                {% if challenge.player_1.username == user.username %}
+                                    <div class="challenge-username">Battling against: {{ challenge.player_2.username }}</div>
+                                {% else %}
+                                    <div class="challenge-username">Battling against: {{ challenge.player_1.username }}</div>
+                                {% endif %}
+                                <!-- figure out how to filter the readinglog by book -->
+                                <div class="challenge-text">Your progress: {{ user.readinglog.percentage_complete }}</div>
+                                
+                                <!-- same issue here -->
+                                {% if challenge.player_1.username == user.username %}
+                                    <div class="challenge-username">{{ challenge.player_2.username }}'s progress: {{ challenge.player_2.user.readinglog.percentage_complete }}</div>
+                                {% else %}
+                                    <div class="challenge-username">{{ challenge.player_1.username }}'s progress: {{ challenge.player_1.user.readinglog.percentage_complete }}</div>
+                                {% endif %}
+
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                        <div class="error">
+                            <div class="header">No Challenges</div>
+                            <a href="{% url 'load_send_challenge_request' %}" class="submit-btn">Start a Challenge</a>
+                        </div>
+                        {% endif %}
+                    
+                {% endif %}
+                </div>
+
+                <div class="sidebar">
+
+                    <a href="{% url 'load_challenge_page' %}" class="sidebar-button">Challenges</a>
+                    
+                    <form hx-get="{% url 'load_send_challenge_request' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                        <button type="submit" class="sidebar-button">Create Challenge</button>
+                    </form>
+
+                    <form hx-get="{% url 'load_pending_challenge_requests' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                        <button type="submit" class="sidebar-button">Pending Requests</button>
+                    </form>
+
+                    <form hx-get="{% url 'load_past_challenges' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                        <button type="submit" class="sidebar-button">Past Challenges</button>
+                    </form>
+
+                    <form hx-get="{% url 'load_challenge_overview' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                        <button type="submit" class="sidebar-button">Overview</button>
+                    </form>
+
+                </div>
+
+            </div>
+        </main>
+
+        
+
+    </body>
+</html>

@@ -41,3 +41,5 @@ def bookshelf (request):
 @login_required
 def friends (request):
     return render(request, "user/friends/friends.html")
+
+# check challenges.urls for challenges view --> 'load_challenges_page'

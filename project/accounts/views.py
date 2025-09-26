@@ -7,7 +7,6 @@ from .models import Profile, FriendRequest
 from django.contrib.auth.models import User
 from .forms import SignUpForm, LoginForm, SendFriendRequest, AcceptFriendRequest, RemoveFriend, RemoveFriendRequest
 
-from django.contrib.auth import login
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
@@ -68,17 +67,17 @@ def send_friend_request(request):
 
                 # so people cant friend themselves
                 if to_user == from_user:
-                    messages.error(request, f"That lonely? Cannot send a request to yourself :)")
+                    messages.error(request, "That lonely? Cannot send a request to yourself :)")
                     return render(request, "user/friends/requests/request_response.html")
                 
                 # so that there arent duplicate requests
                 # cooked ahh query 
                 if FriendRequest.objects.filter(Q(from_user=from_user, to_user=to_user) | Q(from_user=to_user, to_user=from_user)).exists():
-                    messages.error(request, f"Friend request already exists")
+                    messages.error(request, "Friend request already exists")
                     return render(request, "user/friends/requests/request_response.html")
                 
                 FriendRequest.objects.create(from_user=from_user, to_user=to_user)
-                messages.success(request, "Request Sent!")
+                messages.success(request, "Friend request sent!")
                 return render(request, "user/friends/requests/request_response.html")
             
             except User.DoesNotExist:
@@ -93,17 +92,20 @@ def accept_friend_request(request):
         if form.is_valid():
 
             request_id = form.cleaned_data["request_id"]
-            friend_request = FriendRequest.objects.get(id=request_id)
 
-            if friend_request.to_user == request.user:
-                friend_request.to_user.profile.friends.add(friend_request.from_user)
-                friend_request.from_user.profile.friends.add(friend_request.to_user)
-                friend_request.delete()
-                messages.success(request, f"{friend_request.from_user} is now your friend!")
-                return render(request, "user/friends/requests/request_response.html")
-            else:
+            try: 
+                friend_request = FriendRequest.objects.get(id=request_id)
+
+                if friend_request.to_user == request.user:
+                    friend_request.to_user.profile.friends.add(friend_request.from_user)
+                    friend_request.from_user.profile.friends.add(friend_request.to_user)
+                    friend_request.delete()
+                    messages.success(request, f"{friend_request.from_user} is now your friend!")
+                    return render(request, "user/friends/requests/request_response.html")
+            except FriendRequest.DoesNotExist:
                 messages.error(request, "Unable to complete request")
                 return render(request, "user/friends/requests/request_response.html")
+            
     
     return render()
 
@@ -114,10 +116,10 @@ def remove_friend(request):
         form = RemoveFriend(request.POST)
         if form.is_valid():
 
-            try:
-                user = request.user
-                username = form.cleaned_data["username"] 
+            user = request.user
+            username = form.cleaned_data["username"] 
 
+            try:
                 # dont need to use .objects before get since we're already inside the users' friends list
                 # pulls up the entire user instance of the friend, so anything related to the friend can be queried
                 friend_to_remove = user.profile.friends.get(username=username)
@@ -141,31 +143,22 @@ def remove_friend_request(request):
         if form.is_valid():
 
             request_id = form.cleaned_data["request_id"]
-            friend_request = FriendRequest.objects.get(id=request_id)
+            try:
+                friend_request = FriendRequest.objects.get(id=request_id)
 
-            if friend_request.from_user == request.user or friend_request.to_user == request.user:
-                if friend_request:
-                    friend_request.delete()
-                    messages.success(request, f"Request successfully removed!")
-                    return render(request, "user/friends/requests/request_response.html")
-                else:
-                    messages.error(request, f"Unable to remove request")
-                    return render(request, "user/friends/requests/request_response.html")
-            else:
+                if friend_request.from_user == request.user or friend_request.to_user == request.user:
+                    if friend_request:
+                        friend_request.delete()
+                        messages.success(request, f"Request successfully removed!")
+                        return render(request, "user/friends/requests/request_response.html")
+            except:
                 messages.error(request, f"Unable to remove request")
                 return render(request, "user/friends/requests/request_response.html")
+
+            
     
 
 # ROUTING STUFF
-@login_required
-def friends_list(request):
-    if request.method == "GET":
-        user = request.user
-        friends = user.profile.friends.all()
-        return render(request, "user/friends/friends.html", {"friends": friends})
-    return render(request, "user/friends/friends.html")
-
-
 @login_required
 def load_send_friend_request(request):
     if request.method == "GET":
@@ -178,8 +171,9 @@ def load_pending_requests(request):
     if request.method == "GET":
         user = request.user
         try:
-            pending_requests = FriendRequest.objects.filter(to_user=user)
-            return render(request, "user/friends/requests/pending_requests.html", {"pending_requests": pending_requests})
+            pending_recieved_requests = FriendRequest.objects.filter(to_user=user)
+            pending_sent_requests = FriendRequest.objects.filter(from_user=user)
+            return render(request, "user/friends/requests/pending_requests.html", {"pending_recieved_requests": pending_recieved_requests, "pending_sent_requests": pending_sent_requests})
         except:
             messages.error(request, "Error loading requests")
             return render(request, "user/friends/requests/request_response.html")

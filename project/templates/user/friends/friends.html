@@ -22,6 +22,7 @@
                 <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'search' %}" class="nav-link">Explore</a></li>
+                    <li><a href="{% url 'friends' %}" class="nav-link">Friends</a></li>
                     <li><a href="{% url 'bookshelf' %}" class="nav-link">Bookshelf</a></li>
                     <li><a href="{% url 'profile' %}" class="button-nav-link">Profile</a></li>
                 {% else %}
@@ -36,55 +37,57 @@
 
                 <div id="replacement-frame" class="friends-list">
                 {% if user.is_authenticated %}
-                    <form method="GET">
-                        {% if friends %}
-                            {% for friend in friend %}
+                    
+                        {% if user.profile.friends.all %}
+                            {% for friend in user.profile.friends.all %}
                             <div class="leaderboard-card">
                                 <div class="leaderboard-profile-picture-container">
-                                    <img src="{{ friend.user.profile.profile_picture.url }}" alt="User Profile Picture">
+                                    <img src="{{ friend.profile.profile_picture.url }}" alt="User Profile Picture">
                                 </div>
                                 
-                                <div class="leaderboard-username">{{ friend.user.username }}</div>
+                                <div class="leaderboard-username">{{ friend.username }}</div>
 
                                 <div class="leaderboard-info">
                                     <div class="leaderboard-stat-label">Words Written</div>
-                                    <div class="leaderboard-stat-value">{{ friend.user.profile.words_written }}</div>
+                                    <div class="leaderboard-stat-value">{{ friend.profile.words_written }}</div>
                                 </div>
 
                                 <div class="leaderboard-info">
                                     <div class="leaderboard-stat-label">Entries Made</div>
-                                    <div class="leaderboard-stat-value">{{ friend.user.profile.entries_made }}</div>
+                                    <div class="leaderboard-stat-value">{{ friend.profile.entries_made }}</div>
                                 </div>
 
                                 <div class="leaderboard-info">
                                     <div class="leaderboard-stat-label">Pages Read</div>
-                                    <div class="leaderboard-stat-value">{{ friend.user.profile.pages_read }}</div>
+                                    <div class="leaderboard-stat-value">{{ friend.profile.pages_read }}</div>
                                 </div>
 
                                 <div class="leaderboard-info">
                                     <div class="leaderboard-stat-label">Points</div>
-                                    <div class="leaderboard-stat-value">{{ friend.user.profile.points }}</div>
+                                    <div class="leaderboard-stat-value">{{ friend.profile.points }}</div>
                                 </div>
                             </div>
                             {% endfor %}
                         {% else %}
                         <div class="error">
-                            <div class="header">Looks like your bookshelf is empty</div>
-                            <a href="{% url 'search' %}" class="link">Find Books</a>
+                            <div class="header">No friends</div>
+                            <a href="{% url 'search' %}" class="link">Find friends</a>
                         </div>
                         {% endif %}
-                    </form>
+                    
                 {% endif %}
                 </div>
 
                 <div class="sidebar">
+
+                    <a href="{% url 'friends' %}" class="sidebar-button">Friends</a>
                     
                     <form hx-get="{% url 'load_send_friend_request' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
                         <button type="submit" class="sidebar-button">Send Request</button>
                     </form>
 
                     <form hx-get="{% url 'load_pending_requests' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
-                        <button type="submit" class="sidebar-button">Pending</button>
+                        <button type="submit" class="sidebar-button">Pending Requests</button>
                     </form>
                 </div>
 

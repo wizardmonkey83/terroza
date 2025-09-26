@@ -5,13 +5,13 @@
             <div class="header">Incoming Requests</div>
             {% for request in pending_recieved_requests %}
                 <div id="pending-requests-card" class="pending-requests-card">
-                    <div class="header">{{ request.from_user }} wants to be your friend!</div>
-                    <form hx-post="{% url 'accept_friend_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
+                    <div class="header">{{ request.from_user }} has challenged you!</div>
+                    <form hx-post="{% url 'accept_challenge_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
                         <input type="hidden" name="request_id" value="{{ request.id }}"/>
                         {% csrf_token %}
                         <button type="submit" class="submit-btn">Accept</button>
                     </form>
-                    <form hx-post="{% url 'remove_friend_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
+                    <form hx-post="{% url 'remove_challenge_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
                         <input type="hidden" name="request_id" value="{{ request.id }}"/>
                         {% csrf_token %}
                         <button type="submit" class="submit-btn">Decline</button>
@@ -24,8 +24,8 @@
             <div class="header">Sent Requests</div>
             {% for request in pending_sent_requests %}
                 <div id="pending-requests-card" class="pending-requests-card">
-                    <div class="header">You sent a friend request to {{ request.to_user }}</div>
-                    <form hx-post="{% url 'remove_friend_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
+                    <div class="header">You sent a challenge request to {{ request.to_user }}</div>
+                    <form hx-post="{% url 'remove_challenge_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
                         <input type="hidden" name="request_id" value="{{ request.id }}"/>
                         {% csrf_token %}
                         <button type="submit" class="submit-btn">Remove</button>

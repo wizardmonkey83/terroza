@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'accounts',
     'books',
     'routing',
+    'challenges',
 ]
 
 MIDDLEWARE = [

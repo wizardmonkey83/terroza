@@ -1,15 +1,19 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse
 import requests
 import os
+import datetime
 from dotenv import load_dotenv
+
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 # Create your views here.
 from .forms import BookEntry, BookQuery, AddBook, LoadBookEntry
 from .models import ReadingLog, Book
+from challenges.models import Challenge
 
 
+# SEARCHING/ADDING BOOKS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def search_books(request):
 
@@ -79,6 +83,7 @@ def add_book(request):
 
 
 
+# ENTRY STUFF -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 @login_required
 def load_entry(request):
@@ -124,13 +129,25 @@ def save_entry(request):
 
             if percentage_complete == 100:
                 book.reading_status = "read"
+
+                # updates challenge. plus '__' lets me check if null is true, saving for future use
+                if Challenge.objects.filter(Q(player_1=user) | Q(player_2=user), book=book, winner__isnull=True, challenge_status="ongoing").exists():
+                    challenge = Challenge.objects.get((Q(player_1=user) | Q(player_2=user)), book=book)
+                    challenge.winner = user
+                    challenge.date_finished = datetime.date.today()
+                    challenge.challenge_status = "completed"
+                    challenge.save()
+                    # dunno where to put dis ting 
+                    user.profile.bookmarks += challenge.possible_bookmarks
+                    user.profile.save()
+
             book.save()
             
 
             user.profile.points += points_earned
             user.profile.entries_made += 1
             user.profile.pages_read += (points_earned / 10)
-
+    
             split_entry = entry.split(" ")
             user.profile.words_written += len(split_entry)
 
