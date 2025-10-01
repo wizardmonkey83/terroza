@@ -1,15 +1,16 @@
 import requests
 import os
 import datetime
-from dotenv import load_dotenv
+from decouple import config
 
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.contrib import messages
 
 # Create your views here.
 from .forms import BookEntry, BookQuery, AddBook, LoadBookEntry
-from .models import ReadingLog, Book
+from .models import ReadingLog, Book, UserBook
 from challenges.models import Challenge
 
 
@@ -26,8 +27,8 @@ def search_books(request):
             formatted_user_query = user_query.replace(" ", "+")
 
             # performs the api search and returns a json reponse with the fields --> authors, page count, title, published date, and front cover
-            api_key = os.getenv("GOOGLE_BOOKS_API_KEY")
-            google_books_api_url = f"https://www.googleapis.com/books/v1/volumes?q={formatted_user_query}&fields=items(volumeInfo(authors,pageCount,title,publishedDate,imageLinks/thumbnail))&key=AIzaSyCsaOh4ZMAGAlansezPtnnxNNy2uhSYhnk"
+            api_key = config("GOOGLE_BOOKS_API_KEY")
+            google_books_api_url = f"https://www.googleapis.com/books/v1/volumes?q={formatted_user_query}&fields=items(volumeInfo(authors,pageCount,title,publishedDate,imageLinks/thumbnail))&key={api_key}"
             response = requests.get(google_books_api_url)
             data = response.json()
             
@@ -74,12 +75,17 @@ def add_book(request):
                 point_potential = form.cleaned_data["point_potential"]
                 thumbnail = form.cleaned_data["thumbnail"]
 
-                book = Book.objects.create(user=user, title=title, author=author, cover_image=thumbnail, page_count=page_count, point_potential=point_potential, reading_status="reading")
-                book.save()
-                # figure out how to replace the card with a "book added" card
-                return render(request, "books/book_added_successfully.html", {"title": title})
+                new_book, created = Book.objects.get_or_create(title=title, author=author, cover_image=thumbnail, page_count=page_count, point_potential=point_potential)
+
+                if not UserBook.objects.filter(user=user, book=new_book).exists():
+                    UserBook.objects.create(user=user, book=new_book, reading_status="reading")
+                    messages.success(request, f"{title} was added to your bookshelf!")
+                    return render(request, "user/friends/requests/request_response.html")
+                else:
+                    messages.error(request, f"{title} is already on your bookshelf")
+                    return render(request, "user/friends/requests/request_response.html")
             
-        return render(request, "books/search_books.html")
+    return render(request, "books/search_books.html")
 
 
 
@@ -95,10 +101,10 @@ def load_entry(request):
         if form.is_valid():
 
             user = request.user
-            title = form.cleaned_data["title"] 
-            book = get_object_or_404(Book, user=user, title=title)
+            book_id = form.cleaned_data["book_id"] 
+            user_book = get_object_or_404(UserBook, user=user, book__id=book_id)
             
-            return render(request, "user/bookshelf/entry_card.html", {"book": book})
+            return render(request, "user/bookshelf/entry_card.html", {"user_book": user_book})
 
     return render(request, "user/bookshelf/bookshelf.html")
 
@@ -110,29 +116,35 @@ def save_entry(request):
         form = BookEntry(request.POST)
         if form.is_valid():
             user = request.user
-            title = form.cleaned_data["title"]
+            book_id = form.cleaned_data["book_id"]
             entry = form.cleaned_data["entry"]
 
             # load the exact instance of the book in instead of using .filter() which returns a query set
-            book = Book.objects.get(user=user, title=title)
+            try:
+                user_book = UserBook.objects.get(user=user, book__id=book_id)
+            except UserBook.DoesNotExist:
+                messages.error(request, "Book does not exist")
+                return render(request, "user/friends/requests/request_response.html")
 
-            percentage_complete = book.next_milestone
-            num_milestones = len(book.get_milestone_progress())
-            points = book.point_potential / num_milestones
+            global_book = user_book.book
+
+            percentage_complete = user_book.next_milestone
+            num_milestones = len(user_book.get_milestone_progress())
+            points = global_book.point_potential / num_milestones
             points_earned = points
 
-            new_log = ReadingLog(user=user, book=book, entry=entry, points_earned=points_earned, percentage_complete=percentage_complete)
+            new_log = ReadingLog(user=user, user_book=user_book, entry=entry, points_earned=points_earned, percentage_complete=percentage_complete)
             new_log.save()
 
-            if book.reading_status == "to-read":
-                book.reading_status = "reading"
+            if user_book.reading_status == "to-read":
+                user_book.reading_status = "reading"
 
             if percentage_complete == 100:
-                book.reading_status = "read"
+                user_book.reading_status = "read"
 
                 # updates challenge. plus '__' lets me check if null is true, saving for future use
-                if Challenge.objects.filter(Q(player_1=user) | Q(player_2=user), book=book, winner__isnull=True, challenge_status="ongoing").exists():
-                    challenge = Challenge.objects.get((Q(player_1=user) | Q(player_2=user)), book=book)
+                if Challenge.objects.filter(Q(player_1=user) | Q(player_2=user), book=global_book, winner__isnull=True, challenge_status="ongoing").exists():
+                    challenge = Challenge.objects.get((Q(player_1=user) | Q(player_2=user)), book=global_book)
                     challenge.winner = user
                     challenge.date_finished = datetime.date.today()
                     challenge.challenge_status = "completed"
@@ -141,7 +153,7 @@ def save_entry(request):
                     user.profile.bookmarks += challenge.possible_bookmarks
                     user.profile.save()
 
-            book.save()
+            user_book.save()
             
 
             user.profile.points += points_earned
@@ -151,7 +163,7 @@ def save_entry(request):
             split_entry = entry.split(" ")
             user.profile.words_written += len(split_entry)
 
-            if book.reading_status == "read":
+            if user_book.reading_status == "read":
                 user.profile.books_read += 1
 
 

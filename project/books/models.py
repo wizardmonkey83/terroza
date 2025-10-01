@@ -3,29 +3,36 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Book(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books')
-    STATUS_CHOICES = [
-        ("to-read", "To Read"),
-        ("reading", "Currently Reading"),
-        ("read", "Read"),
-    ]
-
-    title = models.CharField(max_length=200) 
+    title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
-    cover_image = models.URLField(max_length=500)
-    page_count = models.PositiveIntegerField()
-    point_potential = models.PositiveIntegerField()
-    reading_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="to-read")
+    cover_image = models.URLField(max_length=400)
+    page_count = models.PositiveIntegerField(default=0)
+    point_potential = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
+
+
+
+class UserBook(models.Model):
+    STATUS_CHOICES = [
+        ("reading", "Reading"),
+        ("to-read", "To-Read"),
+        ("read", "Read"),
+    ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="books")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    reading_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="to-read")
+
+    def __str__(self):
+        return f"{self.user.username}'s copy of {self.book.title}"
     
     def get_milestone_progress(self):
 
         # might be a scuffed method of determining milestones
-        if self.page_count < 150 and self.page_count > 50:
+        if self.book.page_count < 150 and self.book.page_count > 50:
             num_milestones = 2
-        elif self.page_count < 50:
+        elif self.book.page_count < 50:
             num_milestones = 1
         else:
             num_milestones = round(self.page_count / 75)
@@ -37,7 +44,7 @@ class Book(models.Model):
         all_milestones = [round(i * increment) for i in range(1, num_milestones + 1)]
 
         # 'entries' maps to the reading log instance
-        completed_logs = self.entries.filter(user=self.user)
+        completed_logs = self.logs.all(user=self.user)
         # creates a set
         completed_percentages = set(completed_logs.values_list('percentage_complete', flat=True))
 
@@ -48,7 +55,7 @@ class Book(models.Model):
                 'percentage': milestone,
                 'is_complete': milestone in completed_percentages
             })
-    
+
         return progress
 
     # '@property' allows function to be referenced
@@ -63,7 +70,7 @@ class Book(models.Model):
 
 class ReadingLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="entries")
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="entries")
+    user_book = models.ForeignKey(UserBook, on_delete=models.CASCADE, related_name="logs")
     percentage_complete = models.PositiveIntegerField(default=0)
     points_earned = models.PositiveIntegerField()
     # set a min length
@@ -71,7 +78,7 @@ class ReadingLog(models.Model):
     date_of_entry = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.book.title} - {self.percentage_complete} Percent Complete"
+        return f"{self.user_book.book.title} - {self.percentage_complete} Percent Complete"
 
 
 

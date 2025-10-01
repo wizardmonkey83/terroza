@@ -9,6 +9,8 @@ class ChallengeRequest(models.Model):
     to_user = models.ForeignKey(User, related_name="to_user_challenges", on_delete=models.CASCADE)
     book = models.ForeignKey(Book, related_name="request_book", on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.from_user.username} sent a challenge request to {self.to_user.username}"
 
 
 class Challenge(models.Model):

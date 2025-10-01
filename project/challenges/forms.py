@@ -1,7 +1,7 @@
 from django import forms
 
 class SendChallengeRequest(forms.Form):
-    username = forms.CharField(max_length=200)
+    friend_id = forms.IntegerField()
     book_id = forms.IntegerField()
 
 class AcceptChallengeRequest(forms.Form):

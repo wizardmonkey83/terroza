@@ -19,39 +19,50 @@ def send_challenge_request(request):
         if form.is_valid():
 
             book_id = form.cleaned_data["book_id"]
-            username = form.cleaned_data["username"]
+            friend_id = form.cleaned_data["friend_id"]
             from_user = request.user
 
+            # user exists?
             try: 
-                to_user = User.objects.get(username=username)
+                to_user = User.objects.get(id=friend_id)
             except User.DoesNotExist:
-                messages.error(request, f"User '{username}' does not exist")
+                messages.error(request, f"User '{to_user.username}' does not exist")
                 return render(request, "user/friends/requests/request_response.html")
 
+            # user holds book?
             try:
                 book = Book.objects.get(user=from_user, id=book_id)
             except Book.DoesNotExist:
                 messages.error(request, "You do not have that book on your shelf")
                 return render(request, "user/friends/requests/request_response.html")
 
+            # cmon now
             if to_user == from_user:
-                messages.error(request, f"That lonely? Cannot send a request to yourself :)")
+                messages.error(request, f"That lonely?")
                 return render(request, "user/friends/requests/request_response.html")
         
+            # challenge exists?
             if ChallengeRequest.objects.filter(Q(from_user=from_user, to_user=to_user, book=book) | Q(from_user=to_user, to_user=from_user, book=book)).exists():
                 messages.error(request, "Challenge request already exists")
                 return render(request, "user/friends/requests/request_response.html")
             
+            # is friended?
             try:
-                is_friended = from_user.profile.friends.get(user=to_user)
-            except:
-                messages.error(request, "You can only send challenge requests to friends")
-                return render(request, "user/friends/requests/request_response.html")
-            
-            if is_friended:
+                from_user.profile.friends.get(id=to_user.id)
                 ChallengeRequest.objects.create(from_user=from_user, to_user=to_user, book=book)
+
                 messages.success(request, "Challenge request sent!")
                 return render(request, "user/friends/requests/request_response.html")
+
+            except User.DoesNotExist:
+                messages.error(request, "You can only send challenge requests to friends.")
+                return render(request, "user/friends/requests/request_response.html")
+        
+        messages.error(request, "Invalid Form")
+        return render(request, "user/friends/requests/request_response.html")
+
+    messages.error(request, "Invalid Request Method")
+    return render(request, "user/friends/requests/request_response.html")
 
 
 @login_required
@@ -122,7 +133,7 @@ def remove_challenge_request(request):
 @login_required
 def load_send_challenge_request(request):
     if request.method == "GET":
-        return render(request, "user/challenges/requests/send_challenge_request.html")
+        return render(request, "user/challenges/send_challenge_request.html")
     return render(request, "user/challenges/challenges.html")
 
 @login_required

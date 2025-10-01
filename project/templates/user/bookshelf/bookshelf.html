@@ -41,7 +41,7 @@
                             <div id="book-card" class="book-card">
                                 <form hx-post="{% url 'load_entry' %}" hx-target="closest .book-card" hx-swap="outerHTML">
                                     <div class="book-cover">
-                                        <img src="{{ book.cover_image }}" alt="Book Cover">
+                                        <img src="{{ user_book.book.cover_image }}" alt="Book Cover">
                                     </div>
 
                                     <div class="book-title">{{ book.title }}</div>
@@ -55,7 +55,7 @@
                                         <div class="book-percentage-complete">Percent Complete: 0%</div>
                                     {% endif %}
 
-                                    <input type="hidden" name="title" value="{{ book.title }}"/>
+                                    <input type="hidden" name="book_id" value="{{ book.id }}"/>
 
                                     {% csrf_token %}
                                     <button class="submit-btn">Make an Entry</button>
