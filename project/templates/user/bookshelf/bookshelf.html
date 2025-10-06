@@ -19,9 +19,8 @@
         <nav class="navbar">
             <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
             <ul class="nav-links">
-                <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'search' %}" class="nav-link">Explore</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
                     <li><a href="{% url 'friends' %}" class="nav-link">Friends</a></li>
                     <li><a href="{% url 'load_challenge_page' %}" class="nav-link">Challenges</a></li>
                     <li><a href="{% url 'bookshelf' %}" class="nav-link">Bookshelf</a></li>
@@ -34,50 +33,79 @@
         </nav>
 
         <main>
-            {% if user.is_authenticated %}
-                {% if user.books.all %}
-                    {% for book in user.books.all %}
-                        {% if book.reading_status == "reading" or book.reading_status == "to-read" %}
-                            <div id="book-card" class="book-card">
-                                <form hx-post="{% url 'load_entry' %}" hx-target="closest .book-card" hx-swap="outerHTML">
-                                    <div class="book-cover">
-                                        <img src="{{ user_book.book.cover_image }}" alt="Book Cover">
-                                    </div>
+            <div class="friends-frame">
 
-                                    <div class="book-title">{{ book.title }}</div>
-                                    <div class="book-author">{{ book.author }}</div>
-                                    <div class="book-page-count">Page Count: {{ book.page_count }}</div>
-                                    <div class="book-reading-status">Status: {{ book.reading_status }}</div>
-                                    
-                                    {% if book.readinglog %}
-                                        <div class="book-percentage-complete">Percent Complete: {{ book.readinglog.percentage_complete }}%</div>
-                                    {% else %}
-                                        <div class="book-percentage-complete">Percent Complete: 0%</div>
-                                    {% endif %}
+                <div class="sidebar">
 
-                                    <input type="hidden" name="book_id" value="{{ book.id }}"/>
+                    <a href="{% url 'bookshelf' %}" class="sidebar-button">Bookshelf</a>
+                    
+                    <form hx-get="{% url 'load_add_books' %}" hx-target="#replacement-frame" hx-swap="innerHTML">
+                        <button type="submit" class="sidebar-button">Add Books</button>
+                    </form>
 
-                                    {% csrf_token %}
-                                    <button class="submit-btn">Make an Entry</button>
-                                </form>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                <div class="error">
-                    <div class="header">Looks like your bookshelf is empty</div>
-                    <a href="{% url 'search' %}" class="link">Find Books</a>
+                    <form hx-get="{% url 'load_past_books' %}" hx-target="#replacement-frame" hx-swap="innerHTML">
+                        <button type="submit" class="sidebar-button">Completed Books</button>
+                    </form>
+
+                    <form hx-get="{% url 'book_overview' %}" hx-target="#replacement-frame" hx-swap="innerHTML">
+                        <button type="submit" class="sidebar-button">Overview</button>
+                    </form>
+
                 </div>
-                {% endif %}
 
-            {% else %}
-            <div class="error">
-                <div class="header">Let's get you signed in</div>
-                <a href="{% url 'login' %}" class="link">Login/Sign Up</a>
-            </div>
-            {% endif %} 
+                <div id="replacement-frame" class="challenges-list">
+                    {% if user.is_authenticated %}
+                        {% if user.books.all %}
+                        <div class="header">Books</div>
+                            {% for user_book in user.books.all %}
+                                {% if user_book.reading_status == "reading" or user_book.reading_status == "to-read" %}
+                                    <div class="challenge-card">
+                                        
+
+                                            <div class="challenge-book-cover-container">
+                                                <img src="{{ user_book.book.cover_image }}" alt="Book Cover">
+                                            </div>
+
+                                            <div class="challenge-info-container">
+                                                <div class="book-title">{{ user_book.book.title }}</div>
+                                                <div class="book-author">{{ user_book.book.author }}</div>
+                                                <div class="challenge-text">Page Count: {{ user_book.book.page_count }}</div>
+                                                <div class="challenge-text">Status: {{ user_book.reading_status }}</div>
+                                                <div class="challenge-text">Total milestones: {{ user_book.total_milestones }}</div>
+                                                <div class="challenge-text">Percent Complete: {{ user_book.current_progress }}%</div>
                                                 
-            
+                                            </div>
+                                        
+                                        <div class="book-card-actions">
+                                            <form hx-post="{% url 'load_entry' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                                                <input type="hidden" name="user_book_id" value="{{ user_book.id }}"/>
+                                                {% csrf_token %}
+                                                <button type="submit" class="bookshelf-submit-btn">Make an Entry</button>
+                                            </form>
+
+                                            <form hx-post="{% url 'load_view_entries' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                                                <input type="hidden" name="user_book_id" value="{{ user_book.id }}"/>
+                                                {% csrf_token %}
+                                                <button type="submit" class="bookshelf-submit-btn">View Entries</button>
+                                            </form>
+
+                                            <form hx-post="{% url 'load_remove_book_caution' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                                                <input type="hidden" name="user_book_id" value="{{ user_book.id }}"/>
+                                                {% csrf_token %}
+                                                <button type="submit" class="remove-submit-btn">Remove</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                        <div class="error">
+                            <div class="header">Looks like your bookshelf is empty</div>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
         </main>
     </body>
 </html>

@@ -65,6 +65,47 @@ section {
   transition: background-color 0.3s, transform 0.2s;
 }
 
+.accept-submit-btn {
+  margin-top: 1rem;
+  padding: 0.9rem;
+  border-radius: 8px;
+  border: none;
+  background-color: rgb(0, 114, 0);
+  color: #ffffff;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.remove-submit-btn {
+  margin-top: 1rem;
+  padding: 0.9rem;
+  border-radius: 8px;
+  border: none;
+  background-color: rgb(167, 0, 0);
+  color: #ffffff;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.bookshelf-submit-btn {
+  margin-top: 1rem;
+  padding: 0.9rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #764ba2;
+  color: #ffffff;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .submit-btn:hover {
   background-color: #663f91;
   transform: translateY(-2px);
@@ -358,7 +399,7 @@ ul.errorlist {
     list-style-type: none;
     padding: 0;
     margin: -0.5rem 0 0.5rem;
-    color: #ff8a80; /* A light red for errors */
+    color: #ff8a80; 
     font-size: 0.85rem;
 }
 
@@ -431,49 +472,43 @@ ul.errorlist {
 
 
 /* leaderboard page */
-/* --- LEADERBOARD STYLES --- */
-
 .leaderboard-frame {
-    /* CHANGED: Added flex properties to properly center its children */
     display: flex;
     flex-direction: column;
     align-items: center; 
-    
+
     gap: 2rem; 
     width: 100%;
     max-width: 1200px; 
     padding: 2rem 1rem; 
-    /* CHANGED: Centered the frame itself on the page */
     margin: 2rem auto; 
 }
 
-/* NEW: Styling for the new header you wanted */
 .leaderboard-title {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
     color: #e0e0e0;
     text-align: center;
-    margin-bottom: 1rem; /* Adds space below the title */
+    margin-bottom: 1rem; 
 }
 
-/* Container for the list of cards */
-.leaderboard-search-results form{
+
+.leaderboard form{
     display: flex;
     flex-direction: column;
-    /* CHANGED: Increased gap for more spacing between cards */
+    
     gap: 1.5rem; 
-    width: 100%; /* Allow it to fill the centered frame */
+    width: 100%;
     max-width: 950px;
     font-family: 'DM Sans', sans-serif;
     padding-bottom: 0.9rem;
 }
 
-/* Base style for a single user card */
 .leaderboard-card {
   display: flex;
   align-items: center;
-  gap: 1.5rem; /* Increased gap for more internal spacing */
+  gap: 1.5rem; 
   padding: .8rem 1.8rem;
   border-radius: 16px;
   
@@ -491,11 +526,11 @@ ul.errorlist {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* CHANGED: Made the profile picture smaller and circular */
+
 .leaderboard-profile-picture-container img {
     width: 50px;
     height: 50px;
-    border-radius: 16%; /* Makes the image a circle */
+    border-radius: 16%;
     object-fit: cover;
 }
 
@@ -503,7 +538,7 @@ ul.errorlist {
     font-size: 1.1rem;
     font-weight: 700;
     color: #f0f0f0;
-    flex-grow: 1; /* This pushes the stats all the way to the right */
+    flex-grow: 1; 
 }
 
 .leaderboard-info,
@@ -539,3 +574,584 @@ ul.errorlist {
     color: #ffffff;
 }
 
+
+
+/* friends */
+.friends-frame {
+    display: grid;
+    grid-template-columns: 280px 1fr; 
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+    align-items: start; 
+}
+
+/* left column sidebar */
+.sidebar {
+  background: rgba(118, 75, 162, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sidebar-button {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    border-radius: 8px;
+    border: none;
+    background-color: transparent;
+    color: #e0e0e0;
+    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar-button:hover {
+    background-color: #764ba2;
+    color: #ffffff;
+}
+
+/* right column (replacement frame) */
+#replacement-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.friends-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.send-request {
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+  background: rgba(118, 75, 162, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border-radius: 16px;
+}
+
+.search-box {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-box .submit-btn {
+    margin-top: 0;
+}
+
+.search-box input {
+    flex-grow: 1; 
+    padding: 0.9rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: rgba(160, 132, 203, 0.8);
+  box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.5);
+}
+
+.pending-requests {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+
+
+.you-sure-remove-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  background: rgba(118, 75, 162, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  color: #f0f0f0;
+}
+
+.you-sure-remove-card .header {
+  font-size: 1rem; 
+  font-weight: 500;
+  margin: 0;
+  flex-grow: 1; 
+}
+
+
+.you-sure-remove-card form {
+    margin: 0;
+}
+.you-sure-remove-card .accept-submit-btn, .remove-submit-btn {
+    margin-top: 0;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+}
+
+
+.pending-requests-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  background: rgba(118, 75, 162, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  color: #f0f0f0;
+}
+
+.pending-requests-card .header {
+  font-size: 1rem; 
+  font-weight: 500;
+  margin: 0;
+  flex-grow: 1; 
+}
+
+.pending-requests-card form {
+    margin: 0;
+}
+.pending-requests-card .accept-submit-btn, .remove-submit-btn {
+    margin-top: 0;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+}
+
+.error, .success, .info {
+  padding: 1.5rem;
+  background: rgba(118, 75, 162, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.error .header, .success .header, .info .header {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+
+
+
+
+
+
+
+/* --- bookshelf stuff --- */
+.bookshelf-frame {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.book-card {
+    background: rgba(118, 75, 162, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+    color: #e0e0e0;
+}
+
+.book-card .book-cover img {
+    max-width: 150px;
+    height: auto;
+    border-radius: 8px;
+    margin: 0 auto 1rem; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.book-card .book-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.book-card .book-author {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+}
+
+.book-card .book-description-text {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+
+
+
+
+
+
+
+/* --- challenges --- */
+.challenges-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.challenge-card {
+    display: flex; 
+    align-items: center; 
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(118, 75, 162, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    color: #e0e0e0;
+}
+
+.challenge-card .challenge-book-cover-container {
+    width: 100px;
+    flex-shrink: 0; 
+}
+
+.challenge-card .challenge-book-cover-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.challenge-info-container {
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.challenge-card .challenge-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.challenge-card .challenge-username,
+.challenge-card .challenge-text {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.send-request form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.send-request .header {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+    padding-bottom: 0.5rem;
+}
+
+
+.friend-selection-list,
+.book-selection-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.radio-card input[type="radio"] {
+    display: none;
+}
+
+.radio-card {
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s, transform 0.2s;
+}
+
+.radio-card:hover {
+    transform: translateY(-4px);
+}
+
+label.radio-card:has(input:checked) {
+    border-color: #a084cb;
+    box-shadow: 0 0 15px rgba(160, 132, 203, 0.5);
+}
+
+.send-request > form > .submit-btn {
+    align-self: flex-end;
+    width: auto;
+    padding: 0.9rem 2rem;
+}
+
+
+
+.pending-challenge-requests .pending-requests-card .header {
+    flex-grow: 0; 
+    width: 150px; 
+    font-weight: 700;
+}
+
+.pending-requests-card .book-cover {
+    width: 60px;
+    flex-shrink: 0;
+}
+
+.pending-requests-card .book-cover img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+}
+
+.challenge-request-book-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; 
+}
+
+.challenge-request-book-details .book-title {
+    font-weight: 700;
+}
+.challenge-request-book-details .book-author {
+    font-size: 0.85rem;
+    margin-top: .5rem;
+    opacity: 0.7;
+}
+
+.challenge-request-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+
+
+
+/* --- entry card view --- */
+.challenge-info-container {
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0; 
+}
+
+.challenge-card .challenge-username,
+.challenge-card .challenge-text {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    word-break: break-word; 
+}
+
+.entry-form-right {
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    align-self: stretch; 
+}
+
+.entry-form-right textarea {
+    flex-grow: 1; 
+    min-height: 300px; 
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.entry-form-right .submit-btn {
+    align-self: flex-end; 
+    margin-top: 0;
+}
+
+
+.book-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; 
+    align-self: center; 
+    min-width: 130px; 
+    margin-left: auto;
+}
+
+.book-card-actions .bookshelf-submit-btn,
+.book-card-actions .remove-submit-btn {
+    margin-top: 0;
+    width: 100%; 
+}
+
+
+
+.search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    display: none;
+}
+
+.search-input::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+
+main.profile-frame {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 1rem;
+}
+
+#profile-container.form-container {
+    max-width: 550px;
+    width: 100%;
+}
+
+.profile-info {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-info h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    margin-top: 1rem;
+}
+
+.profile-info p {
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+.profile-picture-container img {
+    width: 120px;
+    height: 120px;
+    border-radius: 16%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.profile-actions form {
+    width: 100%;
+}
+
+.profile-actions .submit-btn,
+.profile-actions .remove-submit-btn {
+    width: 100%;
+    margin-top: 0;
+}
+
+
+/* --- homepage --- */
+main.homepage-frame {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 80px); 
+}
+
+#homepage-container.form-container {
+    max-width: 650px;
+    width: 100%;
+}
+
+.homepage-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.8;
+    margin-bottom: 2rem;
+}
+
+.homepage-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.homepage-btn {
+    text-decoration: none;
+    margin-top: 0;
+}

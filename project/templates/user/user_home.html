@@ -19,9 +19,8 @@
         <nav class="navbar">
             <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
             <ul class="nav-links">
-                <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'search' %}" class="nav-link">Explore</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
                     <li><a href="{% url 'friends' %}" class="nav-link">Friends</a></li>
                     <li><a href="{% url 'load_challenge_page' %}" class="nav-link">Challenges</a></li>
                     <li><a href="{% url 'bookshelf' %}" class="nav-link">Bookshelf</a></li>
@@ -32,24 +31,24 @@
                 {% endif %}
             </ul>
         </nav>
-
-        <main>
+        
+        <main class="homepage-frame">
             {% if user.is_authenticated %}
-            <p>Hi {{ user.username }}! Welcome to user_home.html</p>
-            <p><a href="{% url 'password_change' %}">Password Change</a></p>
-            <form action="{% url 'logout' %}" method="post">
-              {% csrf_token %}
-              <button type="submit">Log Out</button>
-            </form>
+                <div id="homepage-container" class="form-container">
+                    <div class="header">Welcome back, {{ user.username }}!</div>
+                    <p class="homepage-text">Ready to dive into a new world or challenge a friend? Your next adventure awaits.</p>
+                    <a href="{% url 'bookshelf' %}" class="submit-btn homepage-btn">Go to Bookshelf</a>
+                </div>
             {% else %}
-            <p>You are not logged in</p>
-            <p><a href="{% url 'login' %}">Log In</a></p>
+                <div id="homepage-container" class="form-container">
+                    <div class="header">Track Your Reading Journey</div>
+                    <p class="homepage-text">Log your books, challenge your friends, and turn your reading habits into a rewarding adventure. Join Terroza today.</p>
+                    <div class="homepage-actions">
+                        <a href="{% url 'signup' %}" class="submit-btn homepage-btn">Sign Up</a>
+                        <a href="{% url 'login' %}" class="submit-btn homepage-btn">Log In</a>
+                    </div>
+                </div>
             {% endif %}
         </main>
-
-       
-
     </body>
-
-        
 </html>

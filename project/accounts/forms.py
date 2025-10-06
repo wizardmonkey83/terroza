@@ -28,7 +28,7 @@ class AcceptFriendRequest(forms.Form):
     request_id = forms.IntegerField()
 
 class RemoveFriend(forms.Form):
-    username = forms.CharField(max_length=200)
+    friend_id = forms.IntegerField()
 
 class RemoveFriendRequest(forms.Form):
     request_id = forms.IntegerField()

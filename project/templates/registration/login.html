@@ -19,9 +19,8 @@
         <nav class="navbar">
             <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
             <ul class="nav-links">
-                <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'search' %}" class="nav-link">Explore</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
                     <li><a href="{% url 'friends' %}" class="nav-link">Friends</a></li>
                     <li><a href="{% url 'load_challenge_page' %}" class="nav-link">Challenges</a></li>
                     <li><a href="{% url 'bookshelf' %}" class="nav-link">Bookshelf</a></li>
@@ -50,7 +49,7 @@
                   </div>
                   
                   <button class="submit-btn" type="submit">Login</button>
-                  <a href="{% url 'signup' %}" class="link">Don't have an Account?</a>
+                  <a href="{% url 'password_reset' %}" class="link">Forgot password?</a>
               </form>
             </div>
           </section>

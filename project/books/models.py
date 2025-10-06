@@ -22,6 +22,7 @@ class UserBook(models.Model):
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="books")
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    current_progress = models.PositiveIntegerField(default=0)
     reading_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="to-read")
 
     def __str__(self):
@@ -30,12 +31,10 @@ class UserBook(models.Model):
     def get_milestone_progress(self):
 
         # might be a scuffed method of determining milestones
-        if self.book.page_count < 150 and self.book.page_count > 50:
-            num_milestones = 2
+        if self.book.page_count > 50:
+            num_milestones = round(self.book.page_count / 50)
         elif self.book.page_count < 50:
             num_milestones = 1
-        else:
-            num_milestones = round(self.page_count / 75)
 
         # avoid dividing by 0
         num_milestones = max(1, num_milestones)
@@ -43,9 +42,8 @@ class UserBook(models.Model):
         increment = 100 / num_milestones
         all_milestones = [round(i * increment) for i in range(1, num_milestones + 1)]
 
-        # 'entries' maps to the reading log instance
-        completed_logs = self.logs.all(user=self.user)
-        # creates a set
+        # 'logs' maps to the reading log instance
+        completed_logs = self.logs.filter(user=self.user)
         completed_percentages = set(completed_logs.values_list('percentage_complete', flat=True))
 
         # so that completed milestones can be tracked
@@ -56,12 +54,17 @@ class UserBook(models.Model):
                 'is_complete': milestone in completed_percentages
             })
 
-        return progress
+        return progress, num_milestones
+    
+    @property
+    def total_milestones(self):
+        progress, num_milestones = self.get_milestone_progress()
+        return num_milestones
 
     # '@property' allows function to be referenced
     @property
     def next_milestone(self):
-        progress = self.get_milestone_progress()
+        progress, num_milestones = self.get_milestone_progress()
 
         for milestone in progress:
             if not milestone['is_complete']:

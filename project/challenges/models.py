@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from books.models import Book
+from books.models import Book, UserBook
 
 # Create your models here.
 class ChallengeRequest(models.Model):
@@ -32,3 +32,18 @@ class Challenge(models.Model):
     # the correct 'on_delete' constraint?
     winner = models.ForeignKey(User, related_name="winner", on_delete=models.SET_NULL, null=True, blank=True)
     challenge_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="blank")
+
+    def get_player_progress(self, player):
+        try:
+            user_book = UserBook.objects.get(user=player, book=self.book)
+            return user_book.current_progress
+        except UserBook.DoesNotExist:
+            return 0
+        
+    @property
+    def player_1_progress(self):
+        return self.get_player_progress(self.player_1)
+    
+    @property
+    def player_2_progress(self):
+        return self.get_player_progress(self.player_2)

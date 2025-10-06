@@ -19,9 +19,8 @@
         <nav class="navbar">
             <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
             <ul class="nav-links">
-                <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'search' %}" class="nav-link">Explore</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
                     <li><a href="{% url 'friends' %}" class="nav-link">Friends</a></li>
                     <li><a href="{% url 'load_challenge_page' %}" class="nav-link">Challenges</a></li>
                     <li><a href="{% url 'bookshelf' %}" class="nav-link">Bookshelf</a></li>
@@ -33,78 +32,69 @@
             </ul>
         </nav>
 
-        <div class="profile-frame">
+        <main id="profile-frame" class="profile-frame">
 
-                    {% if user.is_authenticated %}
-                        <div class="profile-container">
+            {% if user.is_authenticated %}
+                <div id="profile-container" class="form-container">
 
-                            <div class="profile-picture-container">
-                                <img src="{{ user.profile.profile_picture.url }}" alt="User Profile Picture">
-                                <h1>{{ user.username }}</h1>
-                                <p>Joined On {{ user.date_joined }}</p>
-                            </div>
-
-                            <hr/>
-
-                            <button class="submit-btn">Edit Profile</button>
-                
+                    <div class="profile-info">
+                        <div class="profile-picture-container">
+                            <img src="{{ user.profile.profile_picture.url }}" alt="User Profile Picture">
                         </div>
+                        <h1>{{ user.username }}</h1>
+                        <p>Joined On {{ user.date_joined }}</p>
+                    </div>
 
-                        
-                        
-                        <div class="shared-column">
-                            <div class="stats">
-                                <!-- books read -->
-                                <div class="stat-section-upper">
-                                    <div class="stat-card">
-                                        <div class="stat-value">{{ user.profile.books_read }}</div>
-                                        <div class="stat-label">Books Read</div>
-                                    </div>
+               
 
-                                    <!-- words written -->
-                                    <div class="stat-card">
-                                        <div class="stat-value"> {{ user.profile.words_written }}</div>
-                                        <div class="stat-label">Words Written</div>
-                                    </div>
-
-                                    <!-- points earned -->
-                                    <div class="stat-card">
-                                        <div class="stat-value"> {{ user.profile.points }}</div>
-                                        <div class="stat-label">Points Earned</div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="stats">
-                                <div class="stat-section-lower">
-                                    <!-- pages read -->
-                                    <div class="stat-card">
-                                        <div class="stat-value"> {{ user.profile.pages_read }}</div>
-                                        <div class="stat-label">Pages Read</div>
-                                    </div>
-
-                                    <!-- global rank -->
-                                    <div class="stat-card">
-                                        <div class="stat-value"> {{ user.profile.global_rank }}</div>
-                                        <div class="stat-label">Global Ranking</div>
-                                    </div>
-
-                                    <!-- entries made  -->
-                                    <div class="stat-card">
-                                        <div class="stat-value"> {{ user.profile.entries_made }}</div>
-                                        <div class="stat-label">Entries Made</div>
-                                    </div>
-                                </div>
-
-                            </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <p>Books Read</p>
+                            <span class="stat-value">{{ user.profile.books_read }}</span>
                         </div>
+                        <div class="stat-item">
+                            <p>Words Written</p>
+                            <span class="stat-value">{{ user.profile.words_written }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <p>Points Earned</p>
+                            <span class="stat-value">{{ user.profile.points }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <p>Pages Read</p>
+                            <span class="stat-value">{{ user.profile.pages_read }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <p>Bookmarks</p>
+                            <span class="stat-value">{{ user.profile.bookmarks }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <p>Entries Made</p>
+                            <span class="stat-value">{{ user.profile.entries_made }}</span>
+                        </div>
+                    </div>
 
-                    
 
-                        
-                    {% endif %}
 
-        </div>
+                    <div class="profile-actions">
+                        <form action="{% url 'logout_view' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="remove-submit-btn">Logout</button>
+                        </form>
+                        <form hx-get="{% url 'load_delete_account_caution' %}" hx-target="#profile-frame" hx-swap="innerHTML">
+                            {% csrf_token %}
+                            <button type="submit" class="remove-submit-btn">Delete Account</button>
+                        </form>
+                    </div>
+        
+                </div>
+            {% else %}
+                <div class="form-container">
+                    <div class="header">Please Log In</div>
+                    <a href="{% url 'login' %}" class="submit-btn">Login</a>
+                </div>
+            {% endif %}
+
+        </main>
     </body>
 </html>

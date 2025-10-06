@@ -1,0 +1,48 @@
+<div id="replacement-frame" class="challenges-list">
+{% if user.is_authenticated %}
+    {% if user == user_book.user %}
+        {% if user_book.logs.all %}
+        <div class="header">Entries for: {{ user_book.book.title }}</div>
+            {% for entry in user_book.logs.all %}
+            <div class="challenge-card">
+                
+                    <div class="challenge-book-cover-container">
+                        <img src="{{ user_book.book.cover_image }}" alt="Book Cover">
+                    </div>
+                    <div class="challenge-info-container">
+                        <div class="challenge-text">{{ entry.entry }}</div>
+                        <div class="challenge-text">{{ entry.date_of_entry }}</div>
+                    </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="error">
+            <div class="header">No Entries to See Here</div>
+        </div>
+        {% endif %}
+    {% else %}
+    <!-- to include the author of the entry -->
+        {% if user_book.logs.all %}
+        <div class="header">Entries for: {{ user_book.book.title }}</div>
+            {% for entry in user_book.logs.all %}
+            <div class="challenge-card">
+                
+                    <div class="challenge-book-cover-container">
+                        <img src="{{ user_book.book.cover_image }}" alt="Book Cover">
+                    </div>
+                    <div class="challenge-info-container">
+                        <div class="challenge-text">{{ entry.entry }}</div>
+                        <div class="challenge-text">{{ entry.date_of_entry }}. By: {{ user_book.user.username }}</div>
+                        
+                    </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="error">
+            <div class="message-text">No Entries to See Here</div>
+        </div>
+        {% endif %}
+    {% endif %}
+    
+{% endif %}
+</div>

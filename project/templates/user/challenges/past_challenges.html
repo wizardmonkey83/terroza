@@ -3,29 +3,49 @@
             <div class="header">Past Challenges</div>
             {% for challenge in past_challenges %}
                 <div class="challenge-card">
+
                     <div class="challenge-book-cover-container">
-                        <img src="{{ challenge.book.cover_image.url }}" alt="Book Cover">
+                        <img src="{{ challenge.book.cover_image }}" alt="Book Cover">
                     </div>
 
-                    <div class="challenge-title">{{ challenge.book.title }}</div>
-                    <div class="challenge-text">Started: {{ challenge.date_created }}</div>
-                    <div class="challenge-text">Ended: {{ challenge.date_finished }}</div>
+                    <div class="challenge-request-book-details">
+                        
+                        <div class="challenge-title">{{ challenge.book.title }}</div>
+                        <div class="challenge-text">Started: {{ challenge.date_created }}</div>
+                        <div class="challenge-text">Ended: {{ challenge.date_finished }}</div>
 
-                    {% if challenge.player_1.username == user.username %}
-                        <div class="challenge-username">Opponent: {{ challenge.player_2.username }}</div>
-                    {% else %}
-                        <div class="challenge-username">Opponent: {{ challenge.player_1.username }}</div>
-                    {% endif %}
+                        {% if challenge.player_1.username == user.username %}
+                            <div class="challenge-username">Opponent: {{ challenge.player_2.username }}</div>
+                        {% else %}
+                            <div class="challenge-username">Opponent: {{ challenge.player_1.username }}</div>
+                        {% endif %}
+                        
+                        <div class="challenge-text">Winner: {{ challenge.winner }}</div>
+
+                    </div>
+
+                    <div class="book-card-actions">
+                        <form hx-post="{% url 'view_past_challenge_entries' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                            <input type="hidden" name="challenge_id" value="{{ challenge.id }}"/>
+                            {% csrf_token %}
+                            <button type="submit" class="bookshelf-submit-btn">View Your Entries</button>
+                        </form>
+
+                        <form hx-post="{% url 'view_opponents_entries' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                            <input type="hidden" value="{{ challenge.id }}" name="challenge_id"/>
+                            {% csrf_token %}
+                            <button type="submit" class="submit-btn">View Opponents Entries</button>
+                        </form>
+                    </div>
+
                     
-                    <div class="challenge-text">Winner: {{ challenge.winner.user.username }}</div>
 
                 </div>
             {% endfor %}
 
     {% else %}
     <div class="no-requests">
-        <div class="header">No past challenges</div>
-        <a href="{% url 'load_send_challenge_request' %}" class="sidebar-button">Create Challenge</a>
+        <div class="header">No Past Challenges</div>
     </div>
     {% endif %}
 </div>

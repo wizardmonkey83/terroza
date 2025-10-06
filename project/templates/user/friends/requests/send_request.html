@@ -1,9 +1,10 @@
 <div id="replacement-frame" class="send-request">
+    <div class="header">Add Friends</div>
     <form hx-post="{% url 'send_friend_request' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
         <div class="search-box">
             <input type="text" placeholder="Enter a username..." name="username" maxlength="200"/>
             {% csrf_token %}
-            <button type="submit" class="submit-btn">Search</button>
+            <button type="submit" class="submit-btn">Send</button>
         </div>
     </form>
 </div>

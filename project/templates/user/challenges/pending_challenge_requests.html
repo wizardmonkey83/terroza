@@ -1,21 +1,33 @@
-<div id="replacement-frame" class="pending-requests">
+<div id="replacement-frame" class="pending-challenge-requests">
     {% if pending_recieved_requests or pending_sent_requests %}
 
         {% if pending_recieved_requests %}
             <div class="header">Incoming Requests</div>
             {% for request in pending_recieved_requests %}
                 <div id="pending-requests-card" class="pending-requests-card">
-                    <div class="header">{{ request.from_user }} has challenged you!</div>
-                    <form hx-post="{% url 'accept_challenge_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
-                        <input type="hidden" name="request_id" value="{{ request.id }}"/>
-                        {% csrf_token %}
-                        <button type="submit" class="submit-btn">Accept</button>
-                    </form>
-                    <form hx-post="{% url 'remove_challenge_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
-                        <input type="hidden" name="request_id" value="{{ request.id }}"/>
-                        {% csrf_token %}
-                        <button type="submit" class="submit-btn">Decline</button>
-                    </form>
+                    
+
+                    <div class="book-cover">
+                        <img src="{{ request.book.cover_image }}" alt="Book Cover">
+                    </div>
+
+                    <div class="challenge-request-book-details">
+                        <div class="book-title">Challenger: {{ request.from_user }}</div>
+                        <div class="book-author">{{ request.book.title }}</div>
+                    </div>
+
+                    <div class="challenge-request-actions">
+                        <form hx-post="{% url 'accept_challenge_request' %}" hx-target="closest .pending-requests-card" hx-swap="outerHTML">
+                            <input type="hidden" name="request_id" value="{{ request.id }}"/>
+                            {% csrf_token %}
+                            <button type="submit" class="accept-submit-btn">Accept</button>
+                        </form>
+                        <form hx-post="{% url 'remove_challenge_request' %}" hx-target="closest .pending-requests-card" hx-swap="outerHTML">
+                            <input type="hidden" name="request_id" value="{{ request.id }}"/>
+                            {% csrf_token %}
+                            <button type="submit" class="remove-submit-btn">Decline</button>
+                        </form>
+                    </div>
                 </div>
             {% endfor %}
         {% endif %}
@@ -24,12 +36,23 @@
             <div class="header">Sent Requests</div>
             {% for request in pending_sent_requests %}
                 <div id="pending-requests-card" class="pending-requests-card">
-                    <div class="header">You sent a challenge request to {{ request.to_user }}</div>
-                    <form hx-post="{% url 'remove_challenge_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
-                        <input type="hidden" name="request_id" value="{{ request.id }}"/>
-                        {% csrf_token %}
-                        <button type="submit" class="submit-btn">Remove</button>
-                    </form>
+
+                    <div class="book-cover">
+                        <img src="{{ request.book.cover_image }}" alt="Book Cover">
+                    </div>
+
+                    <div class="challenge-request-book-details">
+                        <div class="book-title">Request sent to: {{ request.to_user }}</div>
+                        <div class="book-author">{{ request.book.title }}</div>
+                    </div>
+                    
+                    <div class="challenge-request-actions">
+                        <form hx-post="{% url 'remove_challenge_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
+                            <input type="hidden" name="request_id" value="{{ request.id }}"/>
+                            {% csrf_token %}
+                            <button type="submit" class="remove-submit-btn">Remove</button>
+                        </form>
+                    </div>
                 </div>
             {% endfor %}
         {% endif %}

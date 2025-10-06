@@ -1,55 +1,22 @@
 <div id="replacement-frame" class="send-request">
     <form hx-post="{% url 'send_challenge_request' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
-        {% csrf_token %}
-
+        
         <div class="header">Choose a Friend</div>
-        <div class="friends-list">
-            {% if user.profile.friends.all %}
-                {% for friend in user.profile.friends.all %}
-                    <label for="{{ friend.id }}" class="leaderboard-card radio-card">
-                        <div class="leaderboard-profile-picture-container">
-                            <img src="{{ friend.profile.profile_picture.url }}" alt="User Profile Picture">
-                        </div>
-                        
-                        <div class="leaderboard-username">{{ friend.username }}</div>
-                        
-                        <input type="radio" id="{{ friend.id }}" name="friend_id" value="{{ friend.id }}" required>
-                    </label>
-                {% endfor %}
-            {% else %}
-                <div class="error">
-                    <div class="header">No friends</div>
-                    <a href="{% url 'friends' %}" class="link">Find friends</a>
-                </div>
-            {% endif %}
+        <div class="search-box">
+            <input type="search" name="query" class="search-input" placeholder="Enter a username..." hx-post="{% url 'search_challenge_friends' %}"  hx-trigger="keyup changed delay:500ms, search" hx-target="#friends-list-container" hx-swap="innerHTML">
+        </div>
+
+        <div id="friends-list-container" class="friends-list">
         </div>
 
         <div class="header">Choose a Book</div>
-        <div class="book-selection-list">
-            {% if user.books.all %}
-                {% for book in user.books.all %}
-                    {% if book.reading_status == "to-read" %}
-                        <label for="{{ book.id }}" class="book-card radio-card">
-                            <div class="book-cover">
-                                <img src="{{ user_book.book.cover_image }}" alt="Book Cover">
-                            </div>
-
-                            <div class="book-title">{{ user_book.book.title }}</div>
-                            <div class="book-author">{{ user_book.book.author }}</div>
-                            <div class="book-page-count">Page Count: {{ user_book.book.page_count }}</div>
-                            
-                            <input type="radio" id="{{ book.id }}" name="book_id" value="{{ book.id }}" required>
-                        </label>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                <div class="error">
-                    <div class="header">No eligible books</div>
-                    <a href="{% url 'search' %}" class="link">Find books</a>
-                </div>
-            {% endif %}
+        <div class="search-box">
+            <input type="search" name="query" class="search-input" placeholder="Enter a title..." hx-post="{% url 'search_challenge_books' %}" hx-trigger="keyup changed delay:500ms, search" hx-target="#book-list-container" hx-swap="innerHTML">
         </div>
-        
+
+        <div id="book-list-container" class="book-selection-list">
+        </div>
+        {% csrf_token %}
         <button class="submit-btn" type="submit">Send Challenge Request</button>
     </form>
 </div>

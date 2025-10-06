@@ -19,9 +19,8 @@
         <nav class="navbar">
             <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
             <ul class="nav-links">
-                <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'search' %}" class="nav-link">Explore</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
                     <li><a href="{% url 'friends' %}" class="nav-link">Friends</a></li>
                     <li><a href="{% url 'load_challenge_page' %}" class="nav-link">Challenges</a></li>
                     <li><a href="{% url 'bookshelf' %}" class="nav-link">Bookshelf</a></li>
@@ -35,46 +34,6 @@
 
         <main>
             <div class="friends-frame">
-
-                <div id="replacement-frame" class="challenges-list">
-                {% if user.is_authenticated %}
-                    
-                        {% if current_challenges %}
-                            {% for challenge in current_challenges %}
-                            <div class="challenge-card">
-                                <div class="challenge-book-cover-container">
-                                    <img src="{{ challenge.book.cover_image.url }}" alt="Challenge Book Cover">
-                                </div>
-
-                                <div class="challenge-title">Race to finish: {{ challenge.book.title }}</div>
-                                <div class="challenge-text">Started: {{ challenge.date_created }}</div>
-
-                                {% if challenge.player_1.username == user.username %}
-                                    <div class="challenge-username">Battling against: {{ challenge.player_2.username }}</div>
-                                {% else %}
-                                    <div class="challenge-username">Battling against: {{ challenge.player_1.username }}</div>
-                                {% endif %}
-                                <!-- figure out how to filter the readinglog by book -->
-                                <div class="challenge-text">Your progress: {{ user.readinglog.percentage_complete }}</div>
-                                
-                                <!-- same issue here -->
-                                {% if challenge.player_1.username == user.username %}
-                                    <div class="challenge-username">{{ challenge.player_2.username }}'s progress: {{ challenge.player_2.user.readinglog.percentage_complete }}</div>
-                                {% else %}
-                                    <div class="challenge-username">{{ challenge.player_1.username }}'s progress: {{ challenge.player_1.user.readinglog.percentage_complete }}</div>
-                                {% endif %}
-
-                            </div>
-                            {% endfor %}
-                        {% else %}
-                        <div class="error">
-                            <div class="header">No Challenges</div>
-                            <a href="{% url 'load_send_challenge_request' %}" class="submit-btn">Start a Challenge</a>
-                        </div>
-                        {% endif %}
-                    
-                {% endif %}
-                </div>
 
                 <div class="sidebar">
 
@@ -97,6 +56,64 @@
                     </form>
 
                 </div>
+
+                <div id="replacement-frame" class="challenges-list">
+                {% if user.is_authenticated %}
+                    
+                        {% if current_challenges %}
+                        <div class="header">Current Challenges</div>
+                            {% for challenge in current_challenges %}
+                            <div class="challenge-card">
+                                
+                                    <div class="challenge-book-cover-container">
+                                        <img src="{{ challenge.book.cover_image }}" alt="Challenge Book Cover">
+                                    </div>
+                                    <div class="challenge-info-container">
+                                        <div class="challenge-title">Race to Finish: {{ challenge.book.title }}</div>
+                                        <div class="challenge-text">Started: {{ challenge.date_created }}</div>
+
+                                        {% if challenge.player_1.username == user.username %}
+                                            <div class="challenge-username">Battling Against: {{ challenge.player_2.username }}</div>
+                                        {% else %}
+                                            <div class="challenge-username">Battling Against: {{ challenge.player_1.username }}</div>
+                                        {% endif %}
+                                        
+                                        {% if challenge.player_1.username == user.username %}
+                                            <div class="challenge-username">Your Progress: {{ challenge.player_1_progress }}%</div>
+                                        {% else %}
+                                            <div class="challenge-username">Your Progress: {{ challenge.player_2_progress }}%</div>
+                                        {% endif %}
+                                        
+                                        
+                                        {% if challenge.player_1.username == user.username %}
+                                            <div class="challenge-username">{{ challenge.player_2.username }}'s Progress: {{ challenge.player_2_progress }}%</div>
+                                        {% else %}
+                                            <div class="challenge-username">{{ challenge.player_1.username }}'s Progress: {{ challenge.player_1_progress }}%</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="book-card-actions">
+
+                                        <form hx-post="{% url 'view_opponents_entries' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                                            <input type="hidden" value="{{ challenge.id }}" name="challenge_id"/>
+                                            {% csrf_token %}
+                                            <button type="submit" class="submit-btn">View Opponents Entries</button>
+                                        </form>
+
+                                    </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                        <div class="error">
+                            <div class="header">No Challenges</div>
+                            <a href="{% url 'load_send_challenge_request' %}" class="submit-btn">Start a Challenge</a>
+                        </div>
+                        {% endif %}
+                    
+                {% endif %}
+                </div>
+
+                
 
             </div>
         </main>

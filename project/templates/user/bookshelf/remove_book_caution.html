@@ -1,0 +1,8 @@
+<div class="pending-requests-card">
+    <div class="header">You sure? This will remove {{ user_book.book.title }} from your bookshelf.</div>
+    <form hx-post="{% url 'remove_book' %}" hx-target="closest .pending-requests-card" hx-swap="outerHTML">
+        <input type="hidden" name="user_book_id" value="{{ user_book.id }}"/>
+        {% csrf_token %}
+        <button type="submit" class="remove-submit-btn">Remove</button>
+    </form>
+</div>

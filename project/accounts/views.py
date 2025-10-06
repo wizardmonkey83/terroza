@@ -4,21 +4,30 @@ from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
 
 from .models import Profile, FriendRequest
+from challenges.models import Challenge
 from django.contrib.auth.models import User
 from .forms import SignUpForm, LoginForm, SendFriendRequest, AcceptFriendRequest, RemoveFriend, RemoveFriendRequest
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 
-# LOGIN/SIGN UP
+# LOGIN/SIGN UP ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 def signup_view(request):
 
     if request.method == "POST":
         form = SignUpForm(request.POST)
 
         if form.is_valid():
+            username = form.cleaned_data["username"]
+            email = form.cleaned_data["email"]
             # creates instance of User class and creates an individual user
+            if User.objects.filter(Q(username=username) | Q(email=email)).exists():
+                messages.error(request, "Username and/or Email already exists")
+                return render(request, "user/friends/requests/request_response.html")
+
+
             user = form.save()
             # creates profile model alongside the user
             Profile.objects.create(user=user)
@@ -48,9 +57,28 @@ def login_view(request):
     
     return render(request, "registration/login.html", {"form": form})
         
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect("login")
+
+@login_required
+def delete_account(request):
+    user = request.user
+
+    user.delete()
+    return redirect("signup")
+
+@login_required
+def load_delete_account_caution(request):
+    if request.method == "GET":
+        return render(request, "registration/delete_account_caution.html")
 
 
-# MANAGING FRIENDSIPS 
+
+
+# MANAGING FRIENDSIPS ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 @login_required
 def send_friend_request(request):
     
@@ -67,7 +95,12 @@ def send_friend_request(request):
 
                 # so people cant friend themselves
                 if to_user == from_user:
-                    messages.error(request, "That lonely? Cannot send a request to yourself :)")
+                    messages.error(request, "That lonely?")
+                    return render(request, "user/friends/requests/request_response.html")
+
+                # already friended?
+                if from_user.profile.friends.filter(id=to_user.id).exists():
+                    messages.error(request, "Friend already added")
                     return render(request, "user/friends/requests/request_response.html")
                 
                 # so that there arent duplicate requests
@@ -117,17 +150,20 @@ def remove_friend(request):
         if form.is_valid():
 
             user = request.user
-            username = form.cleaned_data["username"] 
+            friend_id = form.cleaned_data["friend_id"] 
 
             try:
                 # dont need to use .objects before get since we're already inside the users' friends list
                 # pulls up the entire user instance of the friend, so anything related to the friend can be queried
-                friend_to_remove = user.profile.friends.get(username=username)
-                
+                friend_to_remove = user.profile.friends.get(id=friend_id)
                 user.profile.friends.remove(friend_to_remove)
                 # use .remove() to delete the friend instead of .delete() which removes the user related to the friend
                 friend_to_remove.profile.friends.remove(user)
-                messages.success(request, f"{friend_to_remove.username} is no longer your friend :(")
+
+                if Challenge.objects.filter(Q(player_1=friend_to_remove, player_2=user, challenge_status="ongoing") | Q(player_2=friend_to_remove, player_1=user, challenge_status="ongoing")).exists():
+                    Challenge.objects.filter(Q(player_1=friend_to_remove, player_2=user, challenge_status="ongoing") | Q(player_2=friend_to_remove, player_1=user, challenge_status="ongoing")).delete()
+
+                messages.success(request, f"Succesfully unfriended: {friend_to_remove.username}")
                 return render(request, "user/friends/requests/request_response.html")
             
             except User.DoesNotExist:
@@ -178,6 +214,24 @@ def load_pending_requests(request):
             messages.error(request, "Error loading requests")
             return render(request, "user/friends/requests/request_response.html")
     return render(request, "user/friends/friends.html")
+
+@login_required
+def load_remove_friend_caution(request):
+    if request.method == "POST":
+        form = RemoveFriend(request.POST)
+        if form.is_valid():
+            
+            friend_id = form.cleaned_data["friend_id"]
+            user = request.user
+
+            try:
+                friend = user.profile.friends.get(id=friend_id)
+                return render(request, "user/friends/requests/you_sure.html", {"friend": friend})
+            except:
+                messages.error(request, "Unable to Remove Friend")
+                return render(request, "user/friends/requests/request_response.html")
+    return render(request, "user/friends/friends.html")
+
 
 
 

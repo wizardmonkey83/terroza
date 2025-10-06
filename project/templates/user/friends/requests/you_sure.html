@@ -1,0 +1,9 @@
+<div class="pending-requests-card">
+    <div class="header">You sure? This will also delete any ongoing challenges.</div>
+    <form hx-post="{% url 'remove_friend' %}" hx-target="closest .pending-requests-card" hx-swap="outerHTML">
+        <input type="hidden" name="friend_id" value="{{ friend.id }}"/>
+        {% csrf_token %}
+        <button type="submit" class="remove-submit-btn">Unfriend</button>
+    </form>
+</div>
+

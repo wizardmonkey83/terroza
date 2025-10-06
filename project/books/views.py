@@ -9,7 +9,7 @@ from django.db.models import Q
 from django.contrib import messages
 
 # Create your views here.
-from .forms import BookEntry, BookQuery, AddBook, LoadBookEntry
+from .forms import BookEntry, BookQuery, AddBook, LoadBookEntry, ViewPastEntries, RemoveBook
 from .models import ReadingLog, Book, UserBook
 from challenges.models import Challenge
 
@@ -29,8 +29,14 @@ def search_books(request):
             # performs the api search and returns a json reponse with the fields --> authors, page count, title, published date, and front cover
             api_key = config("GOOGLE_BOOKS_API_KEY")
             google_books_api_url = f"https://www.googleapis.com/books/v1/volumes?q={formatted_user_query}&fields=items(volumeInfo(authors,pageCount,title,publishedDate,imageLinks/thumbnail))&key={api_key}"
-            response = requests.get(google_books_api_url)
-            data = response.json()
+            
+            try:
+                response = requests.get(google_books_api_url)
+                response.raise_for_status()
+                data = response.json()
+            except requests.exceptions.RequestException as error:
+                messages.error(request, f"Error message: {error}")
+                return render(request, "user/friends/requests/request_response.html")
             
             books_data = []
             if "items" in data:
@@ -59,6 +65,11 @@ def search_books(request):
     
     return render(request, "books/search_books.html")
 
+@login_required
+def load_add_books(request):
+    if request.method == "GET":
+        return render(request, "books/search_books.html")
+
 
 @login_required
 def add_book(request):
@@ -78,7 +89,7 @@ def add_book(request):
                 new_book, created = Book.objects.get_or_create(title=title, author=author, cover_image=thumbnail, page_count=page_count, point_potential=point_potential)
 
                 if not UserBook.objects.filter(user=user, book=new_book).exists():
-                    UserBook.objects.create(user=user, book=new_book, reading_status="reading")
+                    UserBook.objects.create(user=user, book=new_book, reading_status="to-read")
                     messages.success(request, f"{title} was added to your bookshelf!")
                     return render(request, "user/friends/requests/request_response.html")
                 else:
@@ -86,6 +97,45 @@ def add_book(request):
                     return render(request, "user/friends/requests/request_response.html")
             
     return render(request, "books/search_books.html")
+
+@login_required
+def load_remove_book_caution(request):
+    if request.method == "POST":
+        form = RemoveBook(request.POST)
+        if form.is_valid():
+            
+            user_book_id = form.cleaned_data["user_book_id"]
+            user = request.user
+
+            try:
+                user_book = user.books.get(id=user_book_id)
+                return render(request, "user/bookshelf/remove_book_caution.html", {"user_book": user_book})
+            except:
+                messages.error(request, "Unable to Remove Book")
+                return render(request, "user/friends/requests/request_response.html")
+    return render(request, "user/bookshelf/bookshelf.html")
+
+@login_required
+def remove_book(request):
+    if request.method == "POST":
+        form = RemoveBook(request.POST)
+        if form.is_valid():
+            
+            user_book_id = form.cleaned_data["user_book_id"]
+            user = request.user
+
+            try:
+                user_book = user.books.get(id=user_book_id)
+                # check if this should be .remove()
+                user_book.delete()
+
+                messages.success(request, f"{user_book.book.title} was removed from your bookshelf")
+                return render(request, "user/friends/requests/request_response.html")
+            except:
+                messages.error(request, "Unable to Remove Book")
+                return render(request, "user/friends/requests/request_response.html")
+    return render(request, "user/bookshelf/bookshelf.html")
+
 
 
 
@@ -101,10 +151,14 @@ def load_entry(request):
         if form.is_valid():
 
             user = request.user
-            book_id = form.cleaned_data["book_id"] 
-            user_book = get_object_or_404(UserBook, user=user, book__id=book_id)
-            
-            return render(request, "user/bookshelf/entry_card.html", {"user_book": user_book})
+            user_book_id = form.cleaned_data["user_book_id"] 
+            try:
+                user_book = UserBook.objects.get(user=user, id=user_book_id)
+                
+                return render(request, "user/bookshelf/entry_card.html", {"user_book": user_book})
+            except:
+                messages.error(request, "Problem loading entry")
+                return render(request, "user/friends/requests/request_response.html")
 
     return render(request, "user/bookshelf/bookshelf.html")
 
@@ -116,12 +170,12 @@ def save_entry(request):
         form = BookEntry(request.POST)
         if form.is_valid():
             user = request.user
-            book_id = form.cleaned_data["book_id"]
+            user_book_id = form.cleaned_data["user_book_id"]
             entry = form.cleaned_data["entry"]
 
             # load the exact instance of the book in instead of using .filter() which returns a query set
             try:
-                user_book = UserBook.objects.get(user=user, book__id=book_id)
+                user_book = UserBook.objects.get(user=user, id=user_book_id)
             except UserBook.DoesNotExist:
                 messages.error(request, "Book does not exist")
                 return render(request, "user/friends/requests/request_response.html")
@@ -142,7 +196,7 @@ def save_entry(request):
             if percentage_complete == 100:
                 user_book.reading_status = "read"
 
-                # updates challenge. plus '__' lets me check if null is true, saving for future use
+                # updates challenge. '__' lets me check if null is true, saving for future use
                 if Challenge.objects.filter(Q(player_1=user) | Q(player_2=user), book=global_book, winner__isnull=True, challenge_status="ongoing").exists():
                     challenge = Challenge.objects.get((Q(player_1=user) | Q(player_2=user)), book=global_book)
                     challenge.winner = user
@@ -153,6 +207,7 @@ def save_entry(request):
                     user.profile.bookmarks += challenge.possible_bookmarks
                     user.profile.save()
 
+            user_book.current_progress = percentage_complete
             user_book.save()
             
 
@@ -168,16 +223,36 @@ def save_entry(request):
 
 
             user.profile.save()
-            
-            return render(request, "user/bookshelf/entry_success_card.html")
+            messages.success(request, "Entry Saved!")
+            return render(request, "user/friends/requests/request_response.html")
+        messages.error(request, "Invalid Entry")
+        return render(request, "user/friends/requests/request_response.html")   
         
     return render(request, "user/bookshelf/entry_card.html")
 
             
+@login_required
+def load_view_entries(request):
+    if request.method == "POST":
+        form = ViewPastEntries(request.POST)
+        if form.is_valid():
+            user_book_id = form.cleaned_data["user_book_id"]
+            user = request.user
 
-
-
+            try:
+                user_book = UserBook.objects.get(id=user_book_id, user=user)
+                return render(request, "user/bookshelf/view_entries.html", {"user_book": user_book})
+            except:
+                messages.error(request, "Unable to load entries")
+                return render(request, "user/friends/requests/request_response.html")
         
 
-
+@login_required
+def load_past_books(request):
+    if request.method == "GET":
+        return render(request, "user/bookshelf/past_books.html")
+    
+@login_required
+def book_overview(request):
+    return render(request, "books/book_overview.html")
 

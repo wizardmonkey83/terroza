@@ -1,0 +1,9 @@
+
+<div id="profile-frame" class="pending-requests-card">
+        <p>You sure? This will delete all data associated with your account.</p>
+        <form action="{% url 'delete_account' %}" method="GET">
+            {% csrf_token %}
+            <button type="submit" class="remove-submit-btn">Delete Account</button>
+        </form>
+    
+</div>

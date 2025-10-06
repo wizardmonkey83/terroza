@@ -19,9 +19,8 @@
         <nav class="navbar">
             <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
             <ul class="nav-links">
-                <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'search' %}" class="nav-link">Explore</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
                     <li><a href="{% url 'friends' %}" class="nav-link">Friends</a></li>
                     <li><a href="{% url 'load_challenge_page' %}" class="nav-link">Challenges</a></li>
                     <li><a href="{% url 'bookshelf' %}" class="nav-link">Bookshelf</a></li>
@@ -37,16 +36,17 @@
             <section class="about-frame">
 
                 <div class="about-description">
-                        <h2 class="header">Please lemme get a job</h2>
-                        <p class="line">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        <p class="line">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        <p class="line">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <h2 class="header">A Note from the Creator</h2>
+                        <p class="line">Terroza is my first major solo project, created due to my desire to build a complete, full-stack application.</p>
+                        <p class="line">Due to my prior knowledge of python, I decided to build Terroza using Django for the backend and HTMX for the frontend. Django's "batteries-included" framework enabled me to build a secure, robust backend efficiently and on the frontend side, HTMX allowed me to create a single-page-app feel without needing to learn JavaScript frameworks, yet.</p>
+                        <p class="line">Please reach out if you encounter bugs or have suggestions for the site, after all it's the first iteration.</p>
+                        <p class="line">Thank you for visiting Terroza. I hope you enjoy using it as much as I enjoyed building it.</p></p>
                     </div>
                 <div>
                     <div class="container">
 
                         <img src="/media/about_me_profile_pic.jpg" class="creator-photo" alt="Me in Bilbao" width="360" height="475"/>
-                        <p class="line">Calm luh description about the photo</p>
+                        <p class="line">Me trying to open a bag of plums</p>
 
                     </div>
 

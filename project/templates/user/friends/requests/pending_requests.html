@@ -5,16 +5,16 @@
             <div class="header">Incoming Requests</div>
             {% for request in pending_recieved_requests %}
                 <div id="pending-requests-card" class="pending-requests-card">
-                    <div class="header">{{ request.from_user }} wants to be your friend!</div>
+                    <div class="header">{{ request.from_user }} wants to be your Friend!</div>
                     <form hx-post="{% url 'accept_friend_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
                         <input type="hidden" name="request_id" value="{{ request.id }}"/>
                         {% csrf_token %}
-                        <button type="submit" class="submit-btn">Accept</button>
+                        <button type="submit" class="accept-submit-btn">Accept</button>
                     </form>
                     <form hx-post="{% url 'remove_friend_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
                         <input type="hidden" name="request_id" value="{{ request.id }}"/>
                         {% csrf_token %}
-                        <button type="submit" class="submit-btn">Decline</button>
+                        <button type="submit" class="remove-submit-btn">Decline</button>
                     </form>
                 </div>
             {% endfor %}
@@ -24,11 +24,11 @@
             <div class="header">Sent Requests</div>
             {% for request in pending_sent_requests %}
                 <div id="pending-requests-card" class="pending-requests-card">
-                    <div class="header">You sent a friend request to {{ request.to_user }}</div>
+                    <div class="header">You sent a friend request to: {{ request.to_user }}</div>
                     <form hx-post="{% url 'remove_friend_request' %}" hx-target="#pending-requests-card" hx-swap="outerHTML">
                         <input type="hidden" name="request_id" value="{{ request.id }}"/>
                         {% csrf_token %}
-                        <button type="submit" class="submit-btn">Remove</button>
+                        <button type="submit" class="remove-submit-btn">Remove</button>
                     </form>
                 </div>
             {% endfor %}

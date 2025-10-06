@@ -1,30 +1,25 @@
-<div id="book-card" class="book-card">
-    {% if user_book %}
-        <div id="entry-card" class="entry-card">
-            <form hx-post="{% url 'save_entry' %}" hx-target="closest .entry-card" hx-swap="outerHTML">
+<div id="replacement-frame" class="challenge-card entry-view-card">
+    <div class="header">Make an Entry for: {{ user_book.book.title }}</div>
 
-                <div class="book-cover">
-                        <img src="{{ user_book.book.cover_image }}" alt="Book Cover">
-                </div>
+    <form hx-post="{% url 'save_entry' %}" hx-target="#replacement-frame" hx-swap="outerHTML" class="entry-form-right">
+        {% csrf_token %}
+        <input type="hidden" name="user_book_id" value="{{ user_book.id }}"/>
+        
+        <textarea id="entry-textarea" name="entry" placeholder="Min length: 350, Max length: 750"></textarea>
+        <div id="char-counter" style="text-align: right; opacity: 0.7; font-size: 0.9rem; margin-bottom: 1rem;">0 characters</div>
+        <button type="submit" class="submit-btn">Save</button>
+    </form>
 
-                <div class="book-title">{{ user_book.book.title }}</div>
-                <div class="book-author">{{ user_book.book.author }}</div>
-                <div class="book-page-count">Page Count: {{ user_book.book.page_count }}</div>
-                <div class="book-reading-status">Status: {{ user_book.reading_status }}</div>
-                {% if book.readinglog %}
-                    <div class="book-percentage-complete">Percent Complete: {{ user_book.readinglog.percentage_complete }}%</div>
-                {% else %}
-                    <div class="book-percentage-complete">Percent Complete: 0%</div>
-                {% endif %}
-                    
-            
-                <div class="entry-container">
-                    <input type="text" name="entry" placeholder="Mininum 350 chars"/>
-                </div>
-                <input type="hidden" name="title" value="{{ user_book.book.id }}"/>
-                {% csrf_token %}
-                <button type="submit" class="submit-btn">Save</button>
-            </form>
-        </div>
-    {% endif %}
 </div>
+
+<script>
+    const textarea = document.getElementById('entry-textarea');
+    const counter = document.getElementById('char-counter');
+
+    if (textarea && counter) {
+        textarea.addEventListener('input', () => {
+            const count = textarea.value.length;
+            counter.textContent = `${count} characters`;
+        });
+    }
+</script>

@@ -19,9 +19,8 @@
         <nav class="navbar">
             <div class="logo"><a href="{% url 'index' %}">Terroza</a></div>
             <ul class="nav-links">
-                <li><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'search' %}" class="nav-link">Explore</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
                     <li><a href="{% url 'friends' %}" class="nav-link">Friends</a></li>
                     <li><a href="{% url 'load_challenge_page' %}" class="nav-link">Challenges</a></li>
                     <li><a href="{% url 'bookshelf' %}" class="nav-link">Bookshelf</a></li>
@@ -36,10 +35,28 @@
         <main>
             <div class="friends-frame">
 
+                <div class="sidebar">
+
+                    <a href="{% url 'friends' %}" class="sidebar-button">Friends</a>
+
+                    <form hx-get="{% url 'leaderboard' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                        <button type="submit" class="sidebar-button">Leaderboard</button>
+                    </form>
+                    
+                    <form hx-get="{% url 'load_send_friend_request' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                        <button type="submit" class="sidebar-button">Send Request</button>
+                    </form>
+
+                    <form hx-get="{% url 'load_pending_requests' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                        <button type="submit" class="sidebar-button">Pending Requests</button>
+                    </form>
+                </div>
+
                 <div id="replacement-frame" class="friends-list">
                 {% if user.is_authenticated %}
                     
                         {% if user.profile.friends.all %}
+                        <div class="header">Friends</div>
                             {% for friend in user.profile.friends.all %}
                             <div class="leaderboard-card">
                                 <div class="leaderboard-profile-picture-container">
@@ -67,30 +84,25 @@
                                     <div class="leaderboard-stat-label">Points</div>
                                     <div class="leaderboard-stat-value">{{ friend.profile.points }}</div>
                                 </div>
+
+                                <form hx-post="{% url 'load_remove_friend_caution' %}" hx-target="closest .leaderboard-card" hx-swap="outerHTML">
+                                    <input type="hidden" name="friend_id" value="{{ friend.id }}"/>
+                                    {% csrf_token %}
+                                    <button type="submit" class="remove-submit-btn">Unfriend</button>
+                                </form>
+
                             </div>
                             {% endfor %}
                         {% else %}
                         <div class="error">
                             <div class="header">No friends</div>
-                            <a href="{% url 'search' %}" class="link">Find friends</a>
                         </div>
                         {% endif %}
                     
                 {% endif %}
                 </div>
 
-                <div class="sidebar">
-
-                    <a href="{% url 'friends' %}" class="sidebar-button">Friends</a>
-                    
-                    <form hx-get="{% url 'load_send_friend_request' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
-                        <button type="submit" class="sidebar-button">Send Request</button>
-                    </form>
-
-                    <form hx-get="{% url 'load_pending_requests' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
-                        <button type="submit" class="sidebar-button">Pending Requests</button>
-                    </form>
-                </div>
+                
 
             </div>
         </main>

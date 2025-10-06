@@ -1,0 +1,13 @@
+{% if friends %}
+    {% for friend in friends %}
+        <label for="friend-{{ friend.id }}" class="leaderboard-card radio-card">
+            <div class="leaderboard-profile-picture-container">
+                <img src="{{ friend.profile.profile_picture.url }}" alt="User Profile Picture">
+            </div>
+            <div class="leaderboard-username">{{ friend.username }}</div>
+            <input type="radio" id="friend-{{ friend.id }}" name="friend_id" value="{{ friend.id }}" required>
+        </label>
+    {% endfor %}
+{% else %}
+    <p class="no-results">No friends found.</p>
+{% endif %}

@@ -1,0 +1,34 @@
+<div id="replacement-frame" class="pending-requests">
+    {% if user.books.all %}
+        <div class="header">Completed Books</div>
+        {% for user_book in user.books.all %}
+            {% if user_book.reading_status == "read" %}
+                <div class="challenge-card">
+
+                    <div class="challenge-book-cover-container">
+                        <img src="{{ user_book.book.cover_image }}" alt="Book Cover">
+                    </div>
+
+                    <div class="challenge-request-book-details">
+                        
+                        <div class="challenge-title">{{ user_book.book.title }}</div>
+                        <div class="challenge-text">{{ user_book.book.author }}</div>
+
+                    </div>
+
+                    <div class="book-card-actions">
+                        <form hx-post="{% url 'load_view_entries' %}" hx-target="#replacement-frame" hx-swap="outerHTML">
+                            <input type="hidden" name="user_book_id" value="{{ user_book.id }}"/>
+                            {% csrf_token %}
+                            <button type="submit" class="bookshelf-submit-btn">View Entries</button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+    <div class="no-requests">
+        <div class="header">No Completed Books</div>
+    </div>
+    {% endif %}
+</div>

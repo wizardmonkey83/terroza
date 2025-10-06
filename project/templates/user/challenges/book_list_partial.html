@@ -1,0 +1,17 @@
+{% if books %}
+    {% for user_book in books %}
+        <label for="book-{{ user_book.book.id }}" class="challenge-card radio-card">                         
+            <div class="challenge-book-cover-container">
+                <img src="{{ user_book.book.cover_image }}" alt="Book Cover">
+            </div>
+
+            <div class="challenge-info-container">
+                <div class="book-title">{{ user_book.book.title }}</div>
+                <div class="book-author">{{ user_book.book.author }}</div>
+            </div>
+            <input type="radio" id="book-{{ user_book.book.id }}" name="book_id" value="{{ user_book.book.id }}" required>
+        </label>
+    {% endfor %}
+{% else %}
+    <p>No books found.</p>
+{% endif %}

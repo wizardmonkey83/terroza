@@ -9,3 +9,15 @@ class AcceptChallengeRequest(forms.Form):
 
 class RemoveChallengeRequest(forms.Form):
     request_id = forms.IntegerField()
+
+class ViewOpponentsEntries(forms.Form):
+    challenge_id = forms.IntegerField()
+
+class ViewPastChallengeEntries(forms.Form):
+    challenge_id = forms.IntegerField()
+
+class SearchFriendChallenge(forms.Form):
+    query = forms.CharField(required=False)
+
+class SearchBookChallenge(forms.Form):
+    query = forms.CharField(required=False)

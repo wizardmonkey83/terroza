@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-
-# user profile
 class Profile(models.Model):
     # OneToOneField links the user to each instance of the model
     user = models.OneToOneField(User, on_delete=models.CASCADE)

@@ -1,7 +1,7 @@
 from django import forms
 
 class BookEntry(forms.Form):
-    book_id = forms.IntegerField()
+    user_book_id = forms.IntegerField()
     entry = forms.CharField(label="Your Entry", min_length=350, max_length=700)
 
 class BookQuery(forms.Form):
@@ -15,4 +15,10 @@ class AddBook(forms.Form):
     point_potential = forms.IntegerField(label="Point Potential")
 
 class LoadBookEntry(forms.Form):
-    book_id = forms.IntegerField()
+    user_book_id = forms.IntegerField()
+
+class ViewPastEntries(forms.Form):
+    user_book_id = forms.IntegerField()
+
+class RemoveBook(forms.Form):
+    user_book_id = forms.IntegerField()
