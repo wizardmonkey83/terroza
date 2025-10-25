@@ -1,4 +1,4 @@
-/* --- main stuff */
+/*  main stuff */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Sans:wght@400;500&display=swap');
 
 :root {
@@ -256,7 +256,7 @@ hr {
 
 
 
-/* --- profile page --- */
+/*  profile page  */
 .profile-frame {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -266,7 +266,7 @@ hr {
   column-gap: 1rem;
 }
 
-/* --- inside profile-frame --- */
+/*  inside profile-frame  */
 .profile-container {
   grid-column: 1;
 
@@ -288,7 +288,7 @@ hr {
 
 }
 
-/* --- inside profile-container --- */
+/*  inside profile-container  */
 .profile-picture-container img {
     width: 120px;
     height: 120px;
@@ -772,7 +772,7 @@ ul.errorlist {
 
 
 
-/* --- bookshelf stuff --- */
+/*  bookshelf stuff  */
 .bookshelf-frame {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -829,7 +829,7 @@ ul.errorlist {
 
 
 
-/* --- challenges --- */
+/*  challenges  */
 .challenges-list {
     display: flex;
     flex-direction: column;
@@ -970,7 +970,7 @@ label.radio-card:has(input:checked) {
 
 
 
-/* --- entry card view --- */
+/*  entry card view */
 .challenge-info-container {
     flex-grow: 1; 
     display: flex;
@@ -1123,7 +1123,7 @@ main.profile-frame {
 }
 
 
-/* --- homepage --- */
+/*  homepage  */
 main.homepage-frame {
     display: flex;
     justify-content: center;

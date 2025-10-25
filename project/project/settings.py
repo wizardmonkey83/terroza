@@ -33,7 +33,7 @@ GOOGLE_BOOKS_API_KEY = os.getenv("GOOGLE_BOOKS_API_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["pythonsnatcher18.pythonanywhere.com"]
+ALLOWED_HOSTS = ["pythonsnatcher18.pythonanywhere.com", "127.0.0.1"]
 
 
 # Application definition
@@ -86,6 +86,8 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -95,7 +97,6 @@ DATABASES = {
         'HOST': 'pythonsnatcher18.mysql.pythonanywhere-services.com',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

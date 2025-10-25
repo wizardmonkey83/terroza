@@ -1,0 +1,212 @@
+/* elements from style.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Sans:wght@400;500&display=swap');
+
+:root {
+    --background-color: #1C2C4C;
+    --text-primary: #f0f0f0;
+    --text-secondary: #e0e0e0;
+    --text-muted: #ccc;
+    --primary-accent: #764ba2;
+    --primary-accent-hover: #663f91;
+    --primary-accent-dark: #663f91;
+
+    --glass-bg: rgba(118, 75, 162, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+    --radius-m: 8px;
+    --radius-l: 16px;
+
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+}
+
+/* general elements */
+.homepage-body {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    background-color: var(--background-color);
+    line-height: 1.6;
+}
+
+.hp-container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    /* this should be ideal. might move to 5  */
+    padding: 4rem 0;
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 3.5rem;
+}
+
+.hp-btn {
+    display: inline-block;
+    text-decoration: none;
+    padding: 0.9rem 1.8rem;
+    border-radius: var(--radius-m);
+    font-family: var(--font-body);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.hp-btn-primary {
+    background-color: var(--primary-accent);
+    color: #ffffff;
+}
+
+.hp-btn-primary:hover {
+    background-color: var(--primary-accent-hover);
+    transform: translateY(-2px);
+}
+
+.hp-btn-secondary {
+    background-color: transparent;
+    color: var(--text-primary);
+    border-color: var(--glass-border);
+}
+
+.hp-btn-secondary:hover {
+    background-color: var(--glass-bg);
+    border-color: var(--glass-border);
+}
+
+
+/* first part of page, the one seen when it opens (hrero) */
+.hero-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+    text-align: center;
+}
+
+.hero-title {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+}
+
+.hero-cta {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.hero-logged-in {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3rem;
+    text-align: left; 
+}
+
+.hero-text-content {
+    flex: 1; 
+}
+
+.hero-logged-in .hero-title {
+    font-size: 2.8rem;
+    /* the text should be able to wrap around */
+}
+
+.hero-logged-in .hero-subtitle {
+    text-align: left;
+    margin: 0 0 2rem 0;
+    max-width: 450px;
+}
+
+.hero-logged-in .hero-cta {
+    justify-content: flex-start; 
+}
+
+.hero-graphic {
+    flex: 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-graphic img {
+    width: 100%;
+    max-width: 500px; 
+    height: auto;
+    border-radius: var(--radius-l); 
+    border: 1px solid var(--glass-border); 
+    box-shadow: var(--shadow);
+}
+
+
+/* spotlight style */
+.spotlight-container {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.spotlight-text {
+    flex: 1;
+}
+
+.spotlight-text .section-title {
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+
+.spotlight-text p {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+}
+
+.spotlight-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 2rem;
+}
+
+.spotlight-list li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+}
+
+.spotlight-list li::before {
+    content: '✔';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    color: var(--primary-accent);
+    font-weight: 700;
+}
+
+.spotlight-image {
+    flex: 1;
+}
+
+.spotlight-image img {
+    width: 100%;
+    border-radius: var(--radius-l);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow);
+}

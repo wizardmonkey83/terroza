@@ -13,6 +13,9 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@1.9.9"></script>
     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
     <body>
 
@@ -32,23 +35,86 @@
             </ul>
         </nav>
         
-        <main class="homepage-frame">
-            {% if user.is_authenticated %}
-                <div id="homepage-container" class="form-container">
-                    <div class="header">Welcome back, {{ user.username }}!</div>
-                    <p class="homepage-text">Ready to dive into a new world or challenge a friend? Your next adventure awaits.</p>
-                    <a href="{% url 'bookshelf' %}" class="submit-btn homepage-btn">Go to Bookshelf</a>
-                </div>
-            {% else %}
-                <div id="homepage-container" class="form-container">
-                    <div class="header">Track Your Reading Journey</div>
-                    <p class="homepage-text">Log your books, challenge your friends, and turn your reading habits into a rewarding adventure. Join Terroza today.</p>
-                    <div class="homepage-actions">
-                        <a href="{% url 'signup' %}" class="submit-btn homepage-btn">Sign Up</a>
-                        <a href="{% url 'login' %}" class="submit-btn homepage-btn">Log In</a>
+        <div class="homepage-body">
+
+           <section class="hero-section hp-container">
+                {% if user.is_authenticated %}
+                    
+                    <div class="hero-logged-in">
+                        
+                        <div class="hero-text-content">
+                            <h1 class="hero-title">Welcome back, {{ user.username }}!</h1>
+                            <p class="hero-subtitle">Ready to dive into a new world or challenge a friend? Your next adventure awaits.</p>
+                            <div class="hero-cta">
+                                <a href="{% url 'bookshelf' %}" class="hp-btn hp-btn-primary">Go to Your Bookshelf</a>
+                                <a href="{% url 'load_challenge_page' %}" class="hp-btn hp-btn-secondary">View Challenges</a>
+                            </div>
+                        </div>
+
+                        <div class="hero-graphic">
+                            <img src="{% static 'images/terroza-bookshelf-screenshot.png' %}" alt="Terroza Bookshelf Screenshot">
+                        </div>
+                        
+                    </div>
+                {% else %}
+                    <div class="hero-logged-in">
+                        
+                        <div class="hero-text-content">
+                            <h1 class="hero-title">Reading is an Adventure. Not a Solo Mission.</h1>
+                            <p class="hero-subtitle">Terroza transforms your reading habits into a gamified, social experience. Log books, earn points, and challenge your friends to a reading race.</p>
+                            <div class="hero-cta">
+                                <a href="{% url 'signup' %}" class="hp-btn hp-btn-primary">Get Started for Free</a>
+                                <a href="{% url 'login' %}" class="hp-btn hp-btn-secondary">I'm Already a User</a>
+                            </div>
+                        </div>
+
+                        <div class="hero-graphic">
+                            <img src="{% static 'images/terroza-bookshelf-screenshot.png' %}" alt="Terroza Bookshelf Screenshot">
+                        </div>
+                        
+                    </div>
+                {% endif %}
+            </section>
+
+            
+            <section class="spotlight-section-reversed hp-container">
+                <div class="spotlight-container">
+                    <div class="spotlight-image">
+                        <img src="{% static 'images/terroza-add-book-screenshot.png' %}" alt="Terroza Add Book System">
+                    </div>
+                    <div class="spotlight-text">
+                        <h2 class="section-title">Discover Your Next Favorite Read</h2>
+                        <p>Terroza integrates seamlessly with the Google Books API, giving you access to a vast library. Find any book you're looking for and start tracking it instantly.</p>
+                        <ul class="spotlight-list">
+                            <li>Search millions of books by title, author, or ISBN.</li>
+                            <li>View book details like cover, description, and page count.</li>
+                            <li>Add books to your personal "To-Read" list with a single click.</li>
+                        </ul>
+                        <a href="{% url 'bookshelf' %}" class="hp-btn hp-btn-primary">Explore Books</a>
                     </div>
                 </div>
-            {% endif %}
-        </main>
-    </body>
+            </section>
+        
+
+        
+            <section class="spotlight-section hp-container">
+                <div class="spotlight-container">
+                    <div class="spotlight-text">
+                        <h2 class="section-title">From Friends to Friendly Rivals</h2>
+                        <p>Don't just read alone. Terroza's full social system lets you add friends, see their progress, and challenge them directly.</p>
+                        <ul class="spotlight-list">
+                            <li>Send, accept, and decline friend requests.</li>
+                            <li>View your friends' bookshelves and recent activity.</li>
+                            <li>Challenge any friend to a reading race on a book of your choice.</li>
+                        </ul>
+                        <a href="{% url 'signup' %}" class="hp-btn hp-btn-primary">Find Your Friends</a>
+                    </div>
+                    <div class="spotlight-image">
+                        <img src="{% static 'images/terroza-challenges-screenshot.png' %}" alt="Terroza friends system">
+                    </div>
+                </div>
+            </section>
+    
+        </div>
+        </body>
 </html>
